@@ -158,6 +158,7 @@ namespace LaserGRBL
 			bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
 
 			long start = Tools.HiResTimer.TotalMilliseconds;
+            bool isLaserOn = false;
 			mTotalTravelOff = 0;
 			mTotalTravelOn = 0;
 			mEstimatedTimeOff = TimeSpan.Zero;
@@ -222,9 +223,32 @@ namespace LaserGRBL
 	
 			//trace borders
 			List<string> gc = Potrace.Export2GCode(plist, c.oX, c.oY, c.res, c.lOn, c.lOff, bmp.Size);
-			
-			foreach (string code in gc)
-				list.Add(new GrblCommand(code));
+
+            if (c.dir == RasterConverter.ImageProcessor.Direction.None)
+            {
+                foreach (string code in gc)
+                {
+                    if (code == c.lOn)
+                    {
+                        if (!isLaserOn)
+                        {
+                            list.Add(new GrblCommand(code));
+                            list.Add(new GrblCommand(String.Format("G4 P{0}", c.startDelay)));
+                            isLaserOn = true;
+                            continue;
+                        }
+                    }
+                    else if (code == c.lOff)
+                        isLaserOn = false;
+                    list.Add(new GrblCommand(code));
+                }
+                    
+            }
+            else
+            {
+                foreach (string code in gc)
+                    list.Add(new GrblCommand(code));
+            }
 			
 
 			//laser off
