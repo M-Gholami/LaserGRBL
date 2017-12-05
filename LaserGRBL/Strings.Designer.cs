@@ -98,6 +98,25 @@ namespace LaserGRBL {
         }
         
         /// <summary>
+        ///   Cerca una stringa localizzata simile a There are some changes that have not been applied.
+        ///Do you want to rewrite the configuration?.
+        /// </summary>
+        internal static string BoxConfigDetectedChanges {
+            get {
+                return ResourceManager.GetString("BoxConfigDetectedChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Changes detected!.
+        /// </summary>
+        internal static string BoxConfigDetectedChangesTitle {
+            get {
+                return ResourceManager.GetString("BoxConfigDetectedChangesTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Cerca una stringa localizzata simile a Cannot connect to device.
         /// </summary>
         internal static string BoxConnectErrorTitle {
@@ -134,7 +153,7 @@ namespace LaserGRBL {
         }
         
         /// <summary>
-        ///   Cerca una stringa localizzata simile a {0} Config exported with success!.
+        ///   Cerca una stringa localizzata simile a {0} Config exported successfully!.
         /// </summary>
         internal static string BoxExportConfigSuccess {
             get {
@@ -170,11 +189,65 @@ namespace LaserGRBL {
         }
         
         /// <summary>
-        ///   Cerca una stringa localizzata simile a {0} Config imported with success!.
+        ///   Cerca una stringa localizzata simile a {0} Config imported successfully!.
         /// </summary>
         internal static string BoxImportConfigWithoutError {
             get {
                 return ResourceManager.GetString("BoxImportConfigWithoutError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Error reading config!.
+        /// </summary>
+        internal static string BoxReadConfigError {
+            get {
+                return ResourceManager.GetString("BoxReadConfigError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Showing cached values....
+        /// </summary>
+        internal static string BoxReadConfigPleaseConnect {
+            get {
+                return ResourceManager.GetString("BoxReadConfigPleaseConnect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a {0} Config readed successfully!.
+        /// </summary>
+        internal static string BoxReadConfigSuccess {
+            get {
+                return ResourceManager.GetString("BoxReadConfigSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a No changes... nothing to write!.
+        /// </summary>
+        internal static string BoxWriteConfigNoChange {
+            get {
+                return ResourceManager.GetString("BoxWriteConfigNoChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a {0} Config written with {1} errors!.
+        /// </summary>
+        internal static string BoxWriteConfigWithError {
+            get {
+                return ResourceManager.GetString("BoxWriteConfigWithError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a {0} Config written successfully!.
+        /// </summary>
+        internal static string BoxWriteConfigWithoutError {
+            get {
+                return ResourceManager.GetString("BoxWriteConfigWithoutError", resourceCulture);
             }
         }
         
@@ -229,6 +302,24 @@ namespace LaserGRBL {
         internal static string DirectionVertical {
             get {
                 return ResourceManager.GetString("DirectionVertical", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a File transfer in progress. Disconnect anyway?.
+        /// </summary>
+        internal static string DisconnectAnyway {
+            get {
+                return ResourceManager.GetString("DisconnectAnyway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a File transfer in progress. Exit anyway?.
+        /// </summary>
+        internal static string ExitAnyway {
+            get {
+                return ResourceManager.GetString("ExitAnyway", resourceCulture);
             }
         }
         
@@ -418,6 +509,26 @@ namespace LaserGRBL {
         internal static string MainFormProjectedTime {
             get {
                 return ResourceManager.GetString("MainFormProjectedTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a It seems that the current position is no longer known by Grbl.
+        ///Without the Homing Procedure ($H) the result may not be reliable.
+        ///Continue anyway?.
+        /// </summary>
+        internal static string ResumeJobHomingRequired {
+            get {
+                return ResourceManager.GetString("ResumeJobHomingRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Unknown position.
+        /// </summary>
+        internal static string ResumeJobHomingRequiredTitle {
+            get {
+                return ResourceManager.GetString("ResumeJobHomingRequiredTitle", resourceCulture);
             }
         }
     }

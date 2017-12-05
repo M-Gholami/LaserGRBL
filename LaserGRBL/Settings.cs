@@ -56,7 +56,14 @@ namespace LaserGRBL
 		
 		public static object GetObject(string key, object defval)
 		{
-			return dic.ContainsKey(key) ? dic[key] : defval;
+			return dic.ContainsKey(key) && dic[key] != null ? dic[key] : defval;
+		}
+
+		public static object GetAndDeleteObject(string key, object defval)
+		{
+			object rv = dic.ContainsKey(key) && dic[key] != null ? dic[key] : defval;
+			DeleteObject(key);
+			return rv;
 		}
 		
 		public static void SetObject(string key, object value)
@@ -86,6 +93,11 @@ namespace LaserGRBL
 		{
 			if (dic.ContainsKey(key))
 				dic.Remove(key);
+		}
+
+		internal static bool ExistObject(string key)
+		{
+			return dic.ContainsKey(key);
 		}
 	}
 }

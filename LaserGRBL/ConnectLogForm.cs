@@ -8,6 +8,7 @@
  */
 using System;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace LaserGRBL
 {
@@ -20,6 +21,7 @@ namespace LaserGRBL
 		public ComWrapper.WrapperType currentWrapper;
 
 		GrblCore Core;
+		private string mLoadedFileName;
 
 		public ConnectLogForm()
 		{
@@ -77,7 +79,8 @@ namespace LaserGRBL
 			}
 			else
 			{
-				TbFileName.Text = filename;
+				mLoadedFileName = filename;
+				TbFileName.Text = System.IO.Path.GetFileName(filename);
 			}
 		}
 
@@ -117,8 +120,8 @@ namespace LaserGRBL
 		{
 			if (Core.MachineStatus == GrblCore.MacStatus.Disconnected)
 				Core.OpenCom();
-			else
-				Core.CloseCom(false);
+			else if (!(Core.InProgram && System.Windows.Forms.MessageBox.Show(Strings.DisconnectAnyway, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != System.Windows.Forms.DialogResult.Yes))
+				Core.CloseCom(true);
 
 			TimerUpdate();
 		}
@@ -130,7 +133,7 @@ namespace LaserGRBL
 
 		void BtnRunProgramClick(object sender, EventArgs e)
 		{
-			Core.EnqueueProgram();
+			Core.RunProgram();
 		}
 		void TxtManualCommandCommandEntered(string command)
 		{
@@ -179,8 +182,8 @@ namespace LaserGRBL
 
 			bool old = TxtManualCommand.Enabled;
 			TxtManualCommand.Enabled = Core.CanSendManualCommand;
-			if (old == false && TxtManualCommand.Enabled == true)
-				TxtManualCommand.Focus();
+			//if (old == false && TxtManualCommand.Enabled == true)
+			//	TxtManualCommand.Focus();
 
 			//CBProtocol.Enabled = !Core.IsOpen;
 			CBPort.Enabled = !Core.IsOpen;
@@ -265,6 +268,27 @@ namespace LaserGRBL
 		internal void OnColorChange()
 		{
 			CmdLog.Invalidate();
+		}
+
+		private void TxtManualCommand_Enter(object sender, EventArgs e)
+		{
+			Core.SuspendHK = true;
+		}
+
+		private void TxtManualCommand_Leave(object sender, EventArgs e)
+		{
+			Core.SuspendHK = false;
+		}
+
+		private void TbFileName_MouseEnter(object sender, EventArgs e)
+		{
+			if (mLoadedFileName != null)
+				TT.Show(mLoadedFileName, TbFileName, 5000);
+		}
+
+		private void TbFileName_MouseLeave(object sender, EventArgs e)
+		{
+			TT.Hide(TbFileName);
 		}
 	}
 }

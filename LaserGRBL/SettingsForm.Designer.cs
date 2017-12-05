@@ -35,18 +35,22 @@
 			this.BtnSave = new System.Windows.Forms.Button();
 			this.GB = new System.Windows.Forms.GroupBox();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+			this.CbThreadingMode = new System.Windows.Forms.ComboBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.CBStreamingMode = new System.Windows.Forms.ComboBox();
 			this.BtnStreamingMode = new LaserGRBL.UserControls.ImageButton();
 			this.CBProtocol = new System.Windows.Forms.ComboBox();
-			this.BtnLaserMode = new LaserGRBL.UserControls.ImageButton();
 			this.CBSupportPWM = new System.Windows.Forms.CheckBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.BtnModulationInfo = new LaserGRBL.UserControls.ImageButton();
-			this.CBLaserMode = new System.Windows.Forms.CheckBox();
-			this.label2 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
 			this.BtnProtocol = new LaserGRBL.UserControls.ImageButton();
+			this.CbUnidirectional = new System.Windows.Forms.CheckBox();
+			this.label5 = new System.Windows.Forms.Label();
+			this.label6 = new System.Windows.Forms.Label();
+			this.BtnThreadingModel = new LaserGRBL.UserControls.ImageButton();
+			this.CbIssueDetector = new System.Windows.Forms.CheckBox();
+			this.label7 = new System.Windows.Forms.Label();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.GB.SuspendLayout();
@@ -69,6 +73,7 @@
 			// 
 			// BtnCancel
 			// 
+			this.BtnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			resources.ApplyResources(this.BtnCancel, "BtnCancel");
 			this.BtnCancel.Name = "BtnCancel";
 			this.BtnCancel.UseVisualStyleBackColor = true;
@@ -91,19 +96,30 @@
 			// tableLayoutPanel3
 			// 
 			resources.ApplyResources(this.tableLayoutPanel3, "tableLayoutPanel3");
-			this.tableLayoutPanel3.Controls.Add(this.label4, 2, 3);
-			this.tableLayoutPanel3.Controls.Add(this.CBStreamingMode, 1, 3);
-			this.tableLayoutPanel3.Controls.Add(this.BtnStreamingMode, 0, 3);
-			this.tableLayoutPanel3.Controls.Add(this.CBProtocol, 1, 2);
-			this.tableLayoutPanel3.Controls.Add(this.BtnLaserMode, 0, 1);
+			this.tableLayoutPanel3.Controls.Add(this.CbThreadingMode, 1, 3);
+			this.tableLayoutPanel3.Controls.Add(this.label4, 2, 2);
+			this.tableLayoutPanel3.Controls.Add(this.CBStreamingMode, 1, 2);
+			this.tableLayoutPanel3.Controls.Add(this.BtnStreamingMode, 0, 2);
+			this.tableLayoutPanel3.Controls.Add(this.CBProtocol, 1, 1);
 			this.tableLayoutPanel3.Controls.Add(this.CBSupportPWM, 1, 0);
 			this.tableLayoutPanel3.Controls.Add(this.label1, 2, 0);
 			this.tableLayoutPanel3.Controls.Add(this.BtnModulationInfo, 0, 0);
-			this.tableLayoutPanel3.Controls.Add(this.CBLaserMode, 1, 1);
-			this.tableLayoutPanel3.Controls.Add(this.label2, 2, 1);
-			this.tableLayoutPanel3.Controls.Add(this.label3, 2, 2);
-			this.tableLayoutPanel3.Controls.Add(this.BtnProtocol, 0, 2);
+			this.tableLayoutPanel3.Controls.Add(this.label3, 2, 1);
+			this.tableLayoutPanel3.Controls.Add(this.BtnProtocol, 0, 1);
+			this.tableLayoutPanel3.Controls.Add(this.CbUnidirectional, 1, 4);
+			this.tableLayoutPanel3.Controls.Add(this.label5, 2, 4);
+			this.tableLayoutPanel3.Controls.Add(this.label6, 2, 3);
+			this.tableLayoutPanel3.Controls.Add(this.BtnThreadingModel, 0, 3);
+			this.tableLayoutPanel3.Controls.Add(this.CbIssueDetector, 1, 5);
+			this.tableLayoutPanel3.Controls.Add(this.label7, 2, 5);
 			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+			// 
+			// CbThreadingMode
+			// 
+			resources.ApplyResources(this.CbThreadingMode, "CbThreadingMode");
+			this.CbThreadingMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.CbThreadingMode.FormattingEnabled = true;
+			this.CbThreadingMode.Name = "CbThreadingMode";
 			// 
 			// label4
 			// 
@@ -136,18 +152,6 @@
 			this.CBProtocol.FormattingEnabled = true;
 			this.CBProtocol.Name = "CBProtocol";
 			// 
-			// BtnLaserMode
-			// 
-			this.BtnLaserMode.AltImage = null;
-			this.BtnLaserMode.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-			this.BtnLaserMode.Coloration = System.Drawing.Color.Empty;
-			this.BtnLaserMode.Image = ((System.Drawing.Image)(resources.GetObject("BtnLaserMode.Image")));
-			resources.ApplyResources(this.BtnLaserMode, "BtnLaserMode");
-			this.BtnLaserMode.Name = "BtnLaserMode";
-			this.BtnLaserMode.SizingMode = LaserGRBL.UserControls.ImageButton.SizingModes.FixedSize;
-			this.BtnLaserMode.UseAltImage = false;
-			this.BtnLaserMode.Click += new System.EventHandler(this.BtnLaserMode_Click);
-			// 
 			// CBSupportPWM
 			// 
 			resources.ApplyResources(this.CBSupportPWM, "CBSupportPWM");
@@ -171,17 +175,6 @@
 			this.BtnModulationInfo.UseAltImage = false;
 			this.BtnModulationInfo.Click += new System.EventHandler(this.BtnModulationInfo_Click);
 			// 
-			// CBLaserMode
-			// 
-			resources.ApplyResources(this.CBLaserMode, "CBLaserMode");
-			this.CBLaserMode.Name = "CBLaserMode";
-			this.CBLaserMode.UseVisualStyleBackColor = true;
-			// 
-			// label2
-			// 
-			resources.ApplyResources(this.label2, "label2");
-			this.label2.Name = "label2";
-			// 
 			// label3
 			// 
 			resources.ApplyResources(this.label3, "label3");
@@ -199,10 +192,50 @@
 			this.BtnProtocol.UseAltImage = false;
 			this.BtnProtocol.Click += new System.EventHandler(this.BtnProtocol_Click);
 			// 
+			// CbUnidirectional
+			// 
+			resources.ApplyResources(this.CbUnidirectional, "CbUnidirectional");
+			this.CbUnidirectional.Name = "CbUnidirectional";
+			this.CbUnidirectional.UseVisualStyleBackColor = true;
+			// 
+			// label5
+			// 
+			resources.ApplyResources(this.label5, "label5");
+			this.label5.Name = "label5";
+			// 
+			// label6
+			// 
+			resources.ApplyResources(this.label6, "label6");
+			this.label6.Name = "label6";
+			// 
+			// BtnThreadingModel
+			// 
+			this.BtnThreadingModel.AltImage = null;
+			this.BtnThreadingModel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+			this.BtnThreadingModel.Coloration = System.Drawing.Color.Empty;
+			this.BtnThreadingModel.Image = ((System.Drawing.Image)(resources.GetObject("BtnThreadingModel.Image")));
+			resources.ApplyResources(this.BtnThreadingModel, "BtnThreadingModel");
+			this.BtnThreadingModel.Name = "BtnThreadingModel";
+			this.BtnThreadingModel.SizingMode = LaserGRBL.UserControls.ImageButton.SizingModes.FixedSize;
+			this.BtnThreadingModel.UseAltImage = false;
+			this.BtnThreadingModel.Click += new System.EventHandler(this.BtnThreadingModel_Click);
+			// 
+			// CbIssueDetector
+			// 
+			resources.ApplyResources(this.CbIssueDetector, "CbIssueDetector");
+			this.CbIssueDetector.Name = "CbIssueDetector";
+			this.CbIssueDetector.UseVisualStyleBackColor = true;
+			// 
+			// label7
+			// 
+			resources.ApplyResources(this.label7, "label7");
+			this.label7.Name = "label7";
+			// 
 			// SettingsForm
 			// 
 			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.CancelButton = this.BtnCancel;
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Name = "SettingsForm";
 			this.tableLayoutPanel1.ResumeLayout(false);
@@ -225,15 +258,19 @@
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
 		private System.Windows.Forms.CheckBox CBSupportPWM;
 		private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckBox CBLaserMode;
-        private System.Windows.Forms.Label label2;
 		private UserControls.ImageButton BtnModulationInfo;
-		private UserControls.ImageButton BtnLaserMode;
 		private System.Windows.Forms.ComboBox CBProtocol;
 		private System.Windows.Forms.Label label3;
 		private UserControls.ImageButton BtnProtocol;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.ComboBox CBStreamingMode;
 		private UserControls.ImageButton BtnStreamingMode;
+		private System.Windows.Forms.CheckBox CbUnidirectional;
+		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.ComboBox CbThreadingMode;
+		private System.Windows.Forms.Label label6;
+		private UserControls.ImageButton BtnThreadingModel;
+		private System.Windows.Forms.CheckBox CbIssueDetector;
+		private System.Windows.Forms.Label label7;
     }
 }

@@ -9,7 +9,7 @@ namespace LaserGRBL
 	{
 		string GetMessage();
 
-		string GetResult(bool decode);
+		string GetResult(bool decode, bool erroronly);
 		string GetToolTip(bool decode);
 
 		Color LeftColor { get; }
@@ -25,19 +25,20 @@ namespace LaserGRBL
 		public static CsvDictionary Errors = new CSV.CsvDictionary("LaserGRBL.CSV.error_codes.csv", 2);
 	}
 
-	public class GrblCommand : ICloneable, IGrblRow
+	public partial class GrblCommand : ICloneable, IGrblRow
 	{
 		public class Element
 		{
-			private Char mCommand;
-			private Decimal mNumber;
-			private string mString;
+			protected Char mCommand;
+			protected Decimal mNumber;
+
+			public static implicit operator Element(string value)
+			{return new Element(value[0], decimal.Parse(value.Substring(1), System.Globalization.CultureInfo.InvariantCulture));}
 
 			public Element(Char Command, Decimal Number)
 			{
 				mCommand = Command;
 				mNumber = Number;
-				mString = Command + Number.ToString();
 			}
 
 			public Char Command
@@ -46,6 +47,20 @@ namespace LaserGRBL
 			public Decimal Number
 			{ get { return mNumber; } }
 
+			public override string ToString()
+			{ return Command + Number.ToString(System.Globalization.CultureInfo.InvariantCulture); }
+
+			public override bool Equals(object obj)
+			{
+				Element o = obj as Element;
+				return o != null && o.mCommand == mCommand && o.mNumber == mNumber;
+			}
+
+			public override int GetHashCode()
+			{return mCommand.GetHashCode() ^ mNumber.GetHashCode();}
+
+			//internal void SetNumber(decimal p)
+			//{mNumber = p;}
 		}
 
 		private string mLine;
@@ -61,9 +76,25 @@ namespace LaserGRBL
 		public GrblCommand(string line, int repeat)
 		{ mLine = line.ToUpper().Trim(); mRepeatCount = repeat; }
 
+		public GrblCommand(IEnumerable<Element> elements)
+		{
+			mLine = "";
+			foreach (GrblCommand.Element e in elements)
+				mLine = mLine + e.ToString() + " ";
+			mLine = mLine.TrimEnd().ToUpper();
+		}
+
+		public GrblCommand(Element first, GrblCommand toappend)
+		{
+			mLine = string.Format("{0} {1}", first, toappend.mLine);
+		}
+
+		public bool JustBuilt
+		{ get { return mHelper != null; } }
+
 		public void BuildHelper()
 		{
-			if (mHelper != null) //just built!
+			if (JustBuilt) //just built!
 				return;
 
 			try
@@ -130,7 +161,7 @@ namespace LaserGRBL
 		public void DeleteHelper()
 		{mHelper = null;}
 		
-		public void SetOffset(decimal Distance, TimeSpan Time)
+		public void SetOffset(TimeSpan Time)
 		{mTimeOffset = Time;}
 		
 		public TimeSpan TimeOffset
@@ -161,7 +192,7 @@ namespace LaserGRBL
 		private bool CanCompress
 		{ get { return !IsGrblCommand; } }
 
-		public string GetResult(bool decode)
+		public string GetResult(bool decode, bool erroronly)
 		{
 				if (Status == CommandStatus.ResponseBad && decode)
 				{
@@ -176,7 +207,7 @@ namespace LaserGRBL
 					return mCodedResult; //if ex or null
 				}
 
-				return mCodedResult;
+				return erroronly ? null : mCodedResult;
 		}
 
 		public CommandStatus Status
@@ -231,13 +262,13 @@ namespace LaserGRBL
 		public bool IsLinearMovement
 		{ get { return (X != null || Y != null) && (I == null && J == null && R == null); } }
 
-        public bool IsRapidMovement
-        {
-            get
-            {
-                return (G != null && G.Number == 0);
-            }
-        }
+		//public bool IsRapidMovement
+		//{
+		//	get
+		//	{
+		//		return (G != null && G.Number == 0);
+		//	}
+		//}
 
 		public bool IsArcMovement
 		{ get { return I != null || J != null || R != null; } }
@@ -330,20 +361,12 @@ namespace LaserGRBL
 			double oY = (double)(J != null ? J.Number : 0);
 			return Math.Sqrt(oX * oX + oY * oY);
 		}
-		public PointF GetCenter(float curX, float curY)
+		public PointF GetCenter(float startX, float startY)
 		{
 			float oX = I != null ? (float)I.Number : 0;
 			float oY = J != null ? (float)J.Number : 0;
 
-			return new PointF(curX + oX, curY + oY);
-		}
-
-		public bool TrueMovement(decimal curX, decimal curY, bool abs)
-		{
-			if (abs) //spostamenti assoluti
-				return ((X != null && X.Number != curX) || (Y != null && Y.Number != curY));
-			else //spostamenti relativi
-				return ((X != null && X.Number != 0) || (Y != null && Y.Number != 0));
+			return new PointF(startX + oX, startY + oY);
 		}
 
 		public string GetMessage() //per la visualizzazione
@@ -375,6 +398,9 @@ namespace LaserGRBL
 
 		public int ImageIndex
 		{ get { return Status == CommandStatus.Queued || Status == CommandStatus.WaitingResponse ? 0 : Status == CommandStatus.ResponseGood ? 1 : 2; } }
+
+		public override string ToString()
+		{ return this.mLine; }
 	}
 
 	public class GrblMessage : IGrblRow
@@ -441,8 +467,8 @@ namespace LaserGRBL
 		public string GetMessage()
 		{return mMessage; }
 
-		public string GetResult(bool decode)
-		{return ""; }
+		public string GetResult(bool decode, bool erroronly)
+		{return null; }
 		
 		public string GetToolTip(bool decode) //already decoded on build
 		{ return mToolTip; }
@@ -472,6 +498,6 @@ namespace LaserGRBL
 		{get { return Color.Black; }} //normalmente per questi messaggi non c'è un right
 
 		public int ImageIndex
-		{ get { return -1; } }
+		{ get { return 3; } }
 	}
 }

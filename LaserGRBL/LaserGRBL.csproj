@@ -94,12 +94,18 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoUpdate\ZipStorer.cs" />
     <Compile Include="ColorScheme.cs" />
+    <Compile Include="GrblConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GrblConfig.Designer.cs">
+      <DependentUpon>GrblConfig.cs</DependentUpon>
+    </Compile>
     <Compile Include="GrblEmulator\Console.cs" />
     <Compile Include="GrblEmulator\GrblEmulator.cs" />
     <Compile Include="ComWrapper\IComWrapper.cs" />
@@ -213,6 +219,19 @@
     <Compile Include="CSV\FormattedMessage.cs" />
     <Compile Include="GrblCommand.cs" />
     <Compile Include="GrblFile.cs" />
+    <Compile Include="HotkeyManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HotkeyManagerForm.Designer.cs">
+      <DependentUpon>HotkeyManagerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HotKeysManager.cs" />
+    <Compile Include="IssueDetectorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IssueDetectorForm.Designer.cs">
+      <DependentUpon>IssueDetectorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="JogForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -232,6 +251,9 @@
     <Compile Include="AutoUpdate\NewVersionForm.Designer.cs">
       <DependentUpon>NewVersionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MyDatagridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="PreviewForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -240,6 +262,13 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="ResumeJobForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ResumeJobForm.Designer.cs">
+      <DependentUpon>ResumeJobForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StateBuilder.cs" />
     <Compile Include="Strings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -293,10 +322,15 @@
     </Compile>
     <Compile Include="Tools\Cronometro.cs" />
     <Compile Include="Tools\HiResTimer.cs" />
+    <Compile Include="Tools\InputBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Tools\MathHelper.cs" />
+    <Compile Include="Tools\Serializer.cs" />
     <Compile Include="Tools\TaskScheduler.cs" />
     <Compile Include="Tools\ThreadClass.cs" />
     <Compile Include="Tools\WordWrap.cs" />
+    <Compile Include="UsageStats.cs" />
     <Compile Include="UserControls\ColorProgressBar.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -395,6 +429,10 @@
     <EmbeddedResource Include="ConnectLogForm.zh-CN.resx">
       <DependentUpon>ConnectLogForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GrblConfig.resx">
+      <DependentUpon>GrblConfig.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="CustomButtonForm.de.resx">
       <DependentUpon>CustomButtonForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -403,6 +441,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CustomButtonForm.resx">
       <DependentUpon>CustomButtonForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HotkeyManagerForm.resx">
+      <DependentUpon>HotkeyManagerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IssueDetectorForm.resx">
+      <DependentUpon>IssueDetectorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="JogForm.resx">
       <DependentUpon>JogForm.cs</DependentUpon>
@@ -461,6 +505,9 @@
     <EmbeddedResource Include="PreviewForm.zh-CN.resx">
       <DependentUpon>PreviewForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ResumeJobForm.resx">
+      <DependentUpon>ResumeJobForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
@@ -494,27 +541,33 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RasterConverter\ConvertSizeAndOptionForm.de.resx">
       <DependentUpon>ConvertSizeAndOptionForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="RasterConverter\ConvertSizeAndOptionForm.es.resx">
       <DependentUpon>ConvertSizeAndOptionForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="RasterConverter\ConvertSizeAndOptionForm.fr.resx">
       <DependentUpon>ConvertSizeAndOptionForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="RasterConverter\ConvertSizeAndOptionForm.it.resx">
       <DependentUpon>ConvertSizeAndOptionForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="RasterConverter\ConvertSizeAndOptionForm.pt-BR.resx">
       <DependentUpon>ConvertSizeAndOptionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RasterConverter\ConvertSizeAndOptionForm.resx">
       <DependentUpon>ConvertSizeAndOptionForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="RasterConverter\ConvertSizeAndOptionForm.ru.resx">
       <DependentUpon>ConvertSizeAndOptionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RasterConverter\ConvertSizeAndOptionForm.zh-CN.resx">
       <DependentUpon>ConvertSizeAndOptionForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="RasterConverter\RasterToLaserForm.da.resx">
       <DependentUpon>RasterToLaserForm.cs</DependentUpon>
@@ -572,6 +625,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsForm.de.resx">
       <DependentUpon>SettingsForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsForm.fr.resx">
       <DependentUpon>SettingsForm.cs</DependentUpon>
@@ -668,7 +722,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <Folder Include="Properties\DataSources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

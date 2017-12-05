@@ -23,9 +23,15 @@ namespace LaserGRBL.ComWrapper
 			{
 				try
 				{
-					com.NewLine = "\n";
+					com.DataBits = 8;
+					com.Parity = System.IO.Ports.Parity.None;
+					com.StopBits = System.IO.Ports.StopBits.One;
+					com.Handshake = System.IO.Ports.Handshake.None;
 					com.PortName = mPortName;
 					com.BaudRate = mBaudRate;
+					com.NewLine = "\n";
+					com.WriteTimeout = 1000; //se si blocca in write
+
 					Logger.LogMessage("OpenCom", "Open {0} @ {1} baud", com.PortName.ToUpper(), com.BaudRate);
 
 					com.Open();
@@ -74,5 +80,8 @@ namespace LaserGRBL.ComWrapper
 
 		public string ReadLineBlocking()
 		{return com.ReadLine();} //la lettura della com è bloccante per natura
+
+		public bool HasData()
+		{ return com.BytesToRead > 0; }
 	}
 }

@@ -12,7 +12,8 @@ namespace LaserGRBL.UserControls
 		System.Drawing.Bitmap mBitmap;
 		System.Threading.Thread TH;
 		Matrix mLastMatrix;
-		private PointF mLastPosition;
+		private PointF mLastWPos;
+		private PointF mLastMPos;
 		
 		public GrblPanel()
 		{
@@ -22,7 +23,8 @@ namespace LaserGRBL.UserControls
 			SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 			SetStyle(ControlStyles.AllPaintingInWmPaint, true);
 			SetStyle(ControlStyles.ResizeRedraw, true);
-			mLastPosition = new PointF(0, 0);
+			mLastWPos = new PointF(0, 0);
+			mLastMPos = new PointF(0, 0);
 		}
 
 		protected override void OnPaintBackground(PaintEventArgs e)
@@ -32,24 +34,56 @@ namespace LaserGRBL.UserControls
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
-			if (mBitmap != null)
-				e.Graphics.DrawImage(mBitmap, 0, 0, Width, Height);
-
-
-			PointF p = TranslatePoint(mLastPosition);
-			e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-			e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-
-			using (Pen px = GetPen(ColorScheme.PreviewCross))
+			try
 			{
-				e.Graphics.DrawLine(px, (int)p.X, (int)p.Y - 3, (int)p.X, (int)p.Y - 3 + 7);
-				e.Graphics.DrawLine(px, (int)p.X - 3, (int)p.Y, (int)p.X - 3 + 7, (int)p.Y);
+
+				if (mBitmap != null)
+					e.Graphics.DrawImage(mBitmap, 0, 0, Width, Height);
+
+				if (Core != null)
+				{
+					PointF p = TranslatePoint(mLastWPos);
+					e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+					e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+
+					using (Pen px = GetPen(ColorScheme.PreviewCross))
+					{
+						e.Graphics.DrawLine(px, (int)p.X, (int)p.Y - 3, (int)p.X, (int)p.Y - 3 + 7);
+						e.Graphics.DrawLine(px, (int)p.X - 3, (int)p.Y, (int)p.X - 3 + 7, (int)p.Y);
+
+						using (Brush b = GetBrush(ColorScheme.PreviewText))
+						{
+							Rectangle r = ClientRectangle;
+							r.Inflate(-5, -5);
+							StringFormat sf = new StringFormat();
+
+							//  II | I
+							// ---------
+							// III | IV
+							GrblFile.CartesianQuadrant q = Core != null && Core.LoadedFile != null ? Core.LoadedFile.Quadrant : GrblFile.CartesianQuadrant.Unknown;
+							sf.Alignment = q == GrblFile.CartesianQuadrant.II || q == GrblFile.CartesianQuadrant.III ? StringAlignment.Near : StringAlignment.Far;
+							sf.LineAlignment = q == GrblFile.CartesianQuadrant.III || q == GrblFile.CartesianQuadrant.IV ? StringAlignment.Far : StringAlignment.Near;
+
+							String position = string.Format("X: {0:0.000} Y: {1:0.000}", Core != null ? mLastMPos.X : 0, Core != null ? mLastMPos.Y : 0);
+							if (Core != null && Core.WorkingOffset != PointF.Empty)
+								position = position + "\n" + string.Format("X: {0:0.000} Y: {1:0.000}", Core != null ? mLastWPos.X : 0, Core != null ? mLastWPos.Y : 0);
+
+							e.Graphics.DrawString(position, Font, b, r, sf);
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Logger.LogException("GrblPanel Paint", ex);
 			}
 		}
 
 		private Pen GetPen(Color color)
 		{ return new Pen(color); }
-			
+
+		private Brush GetBrush(Color color)
+		{ return new SolidBrush(color); }	
 
 		public void SetComProgram(GrblCore core)
 		{
@@ -96,18 +130,7 @@ namespace LaserGRBL.UserControls
 				g.PixelOffsetMode = PixelOffsetMode.HighQuality;
 				g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
 
-				g.ScaleTransform(1.0F, -1.0F);
-				g.TranslateTransform(0.0F, -(float)wSize.Height);
-
-				float scaleX = (float)(wSize.Width - 25 - 5) / (float)wSize.Width;
-				float scaleY = (float)(wSize.Height - 15 - 5) / (float)wSize.Height;
-
-				g.ScaleTransform(scaleX, scaleY);
-				g.TranslateTransform(25, 15);
-
-				g.DrawLines(GetPen(ColorScheme.PreviewText), new PointF[] { new PointF(0, wSize.Height), new PointF(0, 0), new PointF(wSize.Width, 0) });
-
-				if (Core != null && Core.HasProgram)
+				if (Core != null /*&& Core.HasProgram*/)
 					Core.LoadedFile.DrawOnGraphics(g, wSize);
 
 				mLastMatrix = g.Transform;
@@ -141,9 +164,10 @@ namespace LaserGRBL.UserControls
 
 		public void TimerUpdate()
 		{
-			if (Core != null && mLastPosition != Core.LaserPosition)
+			if (Core != null && (mLastWPos != Core.WorkPosition || mLastMPos != Core.MachinePosition))
 			{
-				mLastPosition = Core.LaserPosition;
+				mLastWPos = Core.WorkPosition;
+				mLastMPos = Core.MachinePosition;
 				Invalidate();
 			}
 		}

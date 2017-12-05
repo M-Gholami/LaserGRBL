@@ -130,6 +130,13 @@ Please manually download the new version from lasergrbl site.</value>
   <data name="BoxAutoUpdateSuccess" xml:space="preserve">
     <value>Update success!</value>
   </data>
+  <data name="BoxConfigDetectedChanges" xml:space="preserve">
+    <value>There are some changes that have not been applied.
+Do you want to rewrite the configuration?</value>
+  </data>
+  <data name="BoxConfigDetectedChangesTitle" xml:space="preserve">
+    <value>Changes detected!</value>
+  </data>
   <data name="BoxConnectErrorTitle" xml:space="preserve">
     <value>Cannot connect to device</value>
   </data>
@@ -143,7 +150,7 @@ Please manually download the new version from lasergrbl site.</value>
     <value>File does not exist!</value>
   </data>
   <data name="BoxExportConfigSuccess" xml:space="preserve">
-    <value>{0} Config exported with success!</value>
+    <value>{0} Config exported successfully!</value>
   </data>
   <data name="BoxExportConfigSuccessTitle" xml:space="preserve">
     <value>Success</value>
@@ -155,7 +162,25 @@ Please manually download the new version from lasergrbl site.</value>
     <value>{0} Config imported with {1} errors!</value>
   </data>
   <data name="BoxImportConfigWithoutError" xml:space="preserve">
-    <value>{0} Config imported with success!</value>
+    <value>{0} Config imported successfully!</value>
+  </data>
+  <data name="BoxReadConfigError" xml:space="preserve">
+    <value>Error reading config!</value>
+  </data>
+  <data name="BoxReadConfigPleaseConnect" xml:space="preserve">
+    <value>Showing cached values...</value>
+  </data>
+  <data name="BoxReadConfigSuccess" xml:space="preserve">
+    <value>{0} Config readed successfully!</value>
+  </data>
+  <data name="BoxWriteConfigNoChange" xml:space="preserve">
+    <value>No changes... nothing to write!</value>
+  </data>
+  <data name="BoxWriteConfigWithError" xml:space="preserve">
+    <value>{0} Config written with {1} errors!</value>
+  </data>
+  <data name="BoxWriteConfigWithoutError" xml:space="preserve">
+    <value>{0} Config written successfully!</value>
   </data>
   <data name="CustomButtonEdit" xml:space="preserve">
     <value>Edit button</value>
@@ -174,6 +199,12 @@ Please manually download the new version from lasergrbl site.</value>
   </data>
   <data name="DirectionVertical" xml:space="preserve">
     <value>Vertical</value>
+  </data>
+  <data name="DisconnectAnyway" xml:space="preserve">
+    <value>File transfer in progress. Disconnect anyway?</value>
+  </data>
+  <data name="ExitAnyway" xml:space="preserve">
+    <value>File transfer in progress. Exit anyway?</value>
   </data>
   <data name="FormulaCustom" xml:space="preserve">
     <value>Custom</value>
@@ -237,5 +268,13 @@ Please manually download the new version from lasergrbl site.</value>
   </data>
   <data name="MainFormProjectedTime" xml:space="preserve">
     <value>Projected Time:</value>
+  </data>
+  <data name="ResumeJobHomingRequired" xml:space="preserve">
+    <value>It seems that the current position is no longer known by Grbl.
+Without the Homing Procedure ($H) the result may not be reliable.
+Continue anyway?</value>
+  </data>
+  <data name="ResumeJobHomingRequiredTitle" xml:space="preserve">
+    <value>Unknown position</value>
   </data>
 </root>

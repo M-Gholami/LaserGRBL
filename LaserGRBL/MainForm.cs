@@ -7,6 +7,7 @@ namespace LaserGRBL
 	public partial class MainForm : Form
 	{
 		private GrblCore Core;
+		private bool FirstIdle = true;
 
 		public MainForm()
 		{
@@ -29,6 +30,7 @@ namespace LaserGRBL
 			Core.MachineStatusChanged += OnMachineStatus;
 			Core.OnFileLoaded += OnFileLoaded;
 			Core.OnOverrideChange += RefreshOverride;
+			Core.IssueDetected += OnIssueDetected;
 
 			PreviewForm.SetCore(Core);
 			ConnectionForm.SetCore(Core);
@@ -38,6 +40,13 @@ namespace LaserGRBL
 
 			ColorScheme.CurrentScheme = (ColorScheme.Scheme)Settings.GetObject("Color Schema", ColorScheme.Scheme.BlueLaser); ;
 			RefreshColorSchema(); //include RefreshOverride();
+			RefreshFormTitle();
+		}
+
+		void OnIssueDetected(GrblCore.DetectedIssue issue)
+		{
+			if (!(bool)Settings.GetObject("Do not show Issue Detector", false))
+				IssueDetectorForm.CreateAndShowDialog(issue);
 		}
 
 		private void RefreshColorSchema()
@@ -70,11 +79,13 @@ namespace LaserGRBL
 			UpdateTimer.Enabled = true;
 			GitHub.CheckVersion();
 
+			SuspendLayout();
 			//restore last size and position
 			Object[] msp = (Object[])Settings.GetObject("Mainform Size and Position", null);
-			WindowState = msp == null ? FormWindowState.Maximized : (FormWindowState)msp[2] != FormWindowState.Minimized ? (FormWindowState)msp[2] : FormWindowState.Maximized;
-			if (WindowState == FormWindowState.Normal)
-			{ Size = (Size)msp[0]; Location = (Point)msp[1]; }
+			FormWindowState state = msp == null ? FormWindowState.Maximized : (FormWindowState)msp[2] != FormWindowState.Minimized ? (FormWindowState)msp[2] : FormWindowState.Maximized;
+			if (state == FormWindowState.Normal)
+			{ WindowState = state; Size = (Size)msp[0]; Location = (Point)msp[1]; }
+			ResumeLayout();
 		}
 
 		void OnFileLoaded(long elapsed, string filename)
@@ -92,16 +103,36 @@ namespace LaserGRBL
 				TTTEstimated.Text = Tools.Utils.TimeSpanToString(Core.LoadedFile.EstimatedTime, Tools.Utils.TimePrecision.Second, Tools.Utils.TimePrecision.Second, " ,", true);
 			}
 		}
+
 		
 		void OnMachineStatus()
 		{
+			if (Core.MachineStatus == GrblCore.MacStatus.Idle && FirstIdle && Core.Configuration.Count == 0)
+			{
+				try
+				{
+					Core.RefreshConfig();
+					FirstIdle = false;
+				}
+				catch { }
+			}
+
+
 			TimerUpdate();
 		}
 		void MainFormFormClosing(object sender, FormClosingEventArgs e)
 		{
-			Core.CloseCom(false);
-			Settings.SetObject("Mainform Size and Position", new object[] { Size, Location, WindowState});
-			Settings.Save();
+			if (Core.InProgram && System.Windows.Forms.MessageBox.Show(Strings.ExitAnyway, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != System.Windows.Forms.DialogResult.Yes)
+				e.Cancel = true;
+
+			if (!e.Cancel)
+			{
+				Core.CloseCom(true);
+				Settings.SetObject("Mainform Size and Position", new object[] { Size, Location, WindowState });
+				Settings.Save();
+				
+				UsageStats.SaveFile(Core);
+			}
 		}
 		
 
@@ -130,9 +161,10 @@ namespace LaserGRBL
 
 			MnFileOpen.Enabled = Core.CanLoadNewFile;
 			MnSaveProgram.Enabled = Core.HasProgram;
-			MnFileSend.Enabled = Core.CanSendFile; 
-			MnExportConfig.Enabled = Core.CanImportExport;
-			MnImportConfig.Enabled = Core.CanImportExport;
+			MnFileSend.Enabled = Core.CanSendFile;
+			MnGrblConfig.Enabled = true;
+			//MnExportConfig.Enabled = Core.CanImportExport;
+			//MnImportConfig.Enabled = Core.CanImportExport;
 			MnGrblReset.Enabled = Core.CanResetGrbl;
 
 			MNEsp8266.Visible = ((ComWrapper.WrapperType)Settings.GetObject("ComWrapper Protocol", ComWrapper.WrapperType.UsbSerial)) == ComWrapper.WrapperType.LaserWebESP8266;
@@ -140,8 +172,9 @@ namespace LaserGRBL
 			MnConnect.Visible = !Core.IsOpen;
 			MnDisconnect.Visible = Core.IsOpen;
 
-			MnGoHome.Enabled = Core.CanGoHome;
-			MnUnlock.Enabled = Core.CanGoHome;
+			MnGoHome.Visible = Core.Configuration.HomingEnabled;
+			MnGoHome.Enabled = Core.CanDoHoming;
+			MnUnlock.Enabled = Core.CanUnlock;
 			
 			TTOvG0.Visible = Core.SupportOverride;
 			TTOvG1.Visible = Core.SupportOverride;
@@ -174,42 +207,17 @@ namespace LaserGRBL
 					break;
 			}
 
-			LblX.Text = string.Format("X: {0:0.000}", Core.LaserPosition.X);
-			LblY.Text = string.Format("Y: {0:0.000}", Core.LaserPosition.Y);
+			PbBuffer.Maximum = Core.BufferSize;
+			PbBuffer.Value = Core.UsedBuffer;
 
 			ResumeLayout();
 		}
 
-		void MnExportConfigClick(object sender, EventArgs e)
+		private void RefreshFormTitle()
 		{
-			string filename = null;
-			using (System.Windows.Forms.SaveFileDialog ofd = new SaveFileDialog())
-			{
-				ofd.Filter = "GCODE Files|*.nc";
-				ofd.AddExtension = true;
-				ofd.RestoreDirectory = true;
-				if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-					filename = ofd.FileName;
-			}
-
-			if (filename != null)
-			{Core.ExportConfig(filename);}
-		}
-
-		void MnImportConfigClick(object sender, EventArgs e)
-		{
-			string filename = null;
-			using (System.Windows.Forms.OpenFileDialog ofd = new OpenFileDialog())
-			{
-				ofd.Filter = "GCODE Files|*.nc;*.gcode";
-				ofd.CheckFileExists = true;
-				ofd.Multiselect = false;
-				ofd.RestoreDirectory = true;
-				if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-					filename = ofd.FileName;
-			}
-			
-			Core.ImportConfig(filename);
+			Version current = typeof(GitHub).Assembly.GetName().Version;
+			string FormTitle = string.Format("LaserGRBL v{0}", current.ToString(3));
+			if (Text != FormTitle) Text = FormTitle;
 		}
 
 		void ExitToolStripMenuItemClick(object sender, EventArgs e)
@@ -224,12 +232,12 @@ namespace LaserGRBL
 
 		private void MnFileSend_Click(object sender, EventArgs e)
 		{
-			Core.EnqueueProgram();
+			Core.RunProgram();
 		}
 
 		private void MnGrblReset_Click(object sender, EventArgs e)
 		{
-			Core.GrblReset();
+			Core.GrblReset(true);
 		}
 
 		void RefreshOverride()
@@ -295,22 +303,12 @@ namespace LaserGRBL
 
 		private void MnDisconnect_Click(object sender, EventArgs e)
 		{
-			Core.CloseCom(false);
+			if (!(Core.InProgram && System.Windows.Forms.MessageBox.Show(Strings.DisconnectAnyway, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != System.Windows.Forms.DialogResult.Yes))
+				Core.CloseCom(true);
 		}
 		void MnSaveProgramClick(object sender, EventArgs e)
 		{
-			string filename = null;
-			using (System.Windows.Forms.SaveFileDialog ofd = new SaveFileDialog())
-			{
-				ofd.Filter = "GCODE Files|*.nc";
-				ofd.AddExtension = true;
-				ofd.RestoreDirectory = true;
-				if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-					filename = ofd.FileName;
-			}
-
-			if (filename != null)
-			{Core.SaveProgram(filename);}
+			Core.SaveProgram();
 		}
 
 		private void MNEnglish_Click(object sender, EventArgs e)
@@ -343,7 +341,7 @@ namespace LaserGRBL
 
 		private void helpOnLineToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			System.Diagnostics.Process.Start(@"http://lasergrbl.com/usage/");
+			Core.HelpOnLine();
 		}
 
 		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -445,6 +443,52 @@ namespace LaserGRBL
 			Settings.Save();
 
 			RefreshColorSchema();
+		}
+
+		private void grblConfigurationToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			GrblConfig.CreateAndShowDialog(Core);
+		}
+
+		private void donateToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			System.Diagnostics.Process.Start(@"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mlpita%40bergamo3%2eit&lc=US&item_name=LaserGRBL&item_number=Support%20development&currency_code=EUR");
+		}
+
+
+		protected override void OnKeyUp(KeyEventArgs e)
+		{
+			mLastkeyData = Keys.None;
+			base.OnKeyUp(e);
+		}
+
+		Keys mLastkeyData = Keys.None;
+		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+		{
+			if (keyData != mLastkeyData)
+			{
+				mLastkeyData = keyData;
+				return Core.ManageHotKeys(keyData);
+			}
+			else
+			{
+				return base.ProcessCmdKey(ref msg, keyData);
+			}
+		}
+
+		private void MnReOpenFile_Click(object sender, EventArgs e)
+		{
+			Core.ReOpenFile(this);
+		}
+
+		private void fileToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+		{
+			MnReOpenFile.Enabled = Core.CanReOpenFile;
+		}
+
+		private void MnHotkeys_Click(object sender, EventArgs e)
+		{
+			HotkeyManagerForm.CreateAndShowDialog(Core);
 		}
 	}
 
