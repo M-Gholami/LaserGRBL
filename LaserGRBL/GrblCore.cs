@@ -43,8 +43,6 @@ namespace LaserGRBL
 			{ return obj != null && obj is ThreadingMode && ((ThreadingMode)obj).Name == Name; }
 		}
 
-
-
 		public enum DetectedIssue
 		{
 			Unknown = 0,
@@ -204,7 +202,6 @@ namespace LaserGRBL
 
 		private MacStatus mMachineStatus;
 		private const int BUFFER_SIZE = 127;
-		private GrblVersionInfo mGrblVersion;
 
 		private int mCurOvFeed;
 		private int mCurOvRapids;
@@ -227,6 +224,8 @@ namespace LaserGRBL
 
 		private ThreadingMode mThreadingMode = ThreadingMode.UltraFast;
 		private HotKeysManager mHotKeyManager;
+
+		public UsageStats.UsageCounters UsageCounters;
 
 		public GrblCore(System.Windows.Forms.Control syncroObject)
 		{
@@ -254,7 +253,6 @@ namespace LaserGRBL
 
 			mSentPtr = mSent;
 			mQueuePtr = mQueue;
-			mGrblVersion = null;
 
 			mCurOvFeed = mCurOvRapids = mCurOvSpindle = 100;
 			mTarOvFeed = mTarOvRapids = mTarOvSpindle = 100;
@@ -262,6 +260,8 @@ namespace LaserGRBL
 			if (!Settings.ExistObject("Hotkey Setup")) Settings.SetObject("Hotkey Setup", new HotKeysManager());
 			mHotKeyManager = (HotKeysManager)Settings.GetObject("Hotkey Setup", null);
 			mHotKeyManager.Init(this);
+
+			UsageCounters = new UsageStats.UsageCounters();
 		}
 
 		public GrblConf Configuration
@@ -298,13 +298,16 @@ namespace LaserGRBL
 
 		public GrblVersionInfo GrblVersion
 		{
-			get { return mGrblVersion; }
+			get { return (GrblVersionInfo)Settings.GetObject("Last GrblVersion known", null); }
 			set
 			{
-				if (mGrblVersion == null || !mGrblVersion.Equals(value))
+				if (GrblVersion != null)
+					Logger.LogMessage("VersionInfo", "Detected Grbl v{0}", value);
+
+				if (GrblVersion == null || !GrblVersion.Equals(value))
 				{
-					mGrblVersion = value;
-					Logger.LogMessage("VersionInfo", "Detected Grbl v{0}", mGrblVersion);
+					Settings.SetObject("Last GrblVersion known", value);
+					Settings.Save();
 				}
 			}
 		}
@@ -401,7 +404,10 @@ namespace LaserGRBL
 					if (ImageExtensions.Contains(System.IO.Path.GetExtension(filename).ToLowerInvariant())) //import raster image
 					{
 						try
-						{ RasterConverter.RasterToLaserForm.CreateAndShowDialog(this, filename, parent); }
+						{
+							RasterConverter.RasterToLaserForm.CreateAndShowDialog(this, filename, parent);
+							UsageCounters.RasterFile++;
+						}
 						catch (Exception ex)
 						{ Logger.LogException("RasterImport", ex); }
 					}
@@ -410,7 +416,10 @@ namespace LaserGRBL
 						System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor;
 
 						try
-						{ file.LoadFile(filename); }
+						{
+							file.LoadFile(filename);
+							UsageCounters.GCodeFile++;
+						}
 						catch (Exception ex)
 						{ Logger.LogException("GCodeImport", ex); }
 
@@ -524,7 +533,7 @@ namespace LaserGRBL
 		{
 			private System.Collections.Generic.List<IGrblRow> ErrorLines = new System.Collections.Generic.List<IGrblRow>();
 
-			public WriteConfigException(System.Collections.Generic.List<IGrblRow> mSentPtr) 
+			public WriteConfigException(System.Collections.Generic.List<IGrblRow> mSentPtr)
 			{
 				foreach (IGrblRow row in mSentPtr)
 					if (row is GrblCommand)
@@ -647,7 +656,7 @@ namespace LaserGRBL
 				GrblCommand.StatePositionBuilder spb = new GrblCommand.StatePositionBuilder();
 
 				if (homing) mQueuePtr.Enqueue(new GrblCommand("$H"));
-				
+
 				if (setwco)
 				{
 					//compute current point and set offset
@@ -656,7 +665,7 @@ namespace LaserGRBL
 					System.Drawing.PointF cur = new System.Drawing.PointF(pos.X - wco.X, pos.Y - wco.Y);
 					mQueue.Enqueue(new GrblCommand(String.Format("G92 X{0} Y{1}", cur.X.ToString(System.Globalization.CultureInfo.InvariantCulture), cur.Y.ToString(System.Globalization.CultureInfo.InvariantCulture))));
 				}
-				
+
 				for (int i = 0; i < position && i < file.Count; i++) //analizza fino alla posizione
 					spb.AnalyzeCommand(file[i], false);
 
@@ -704,6 +713,8 @@ namespace LaserGRBL
 				com = new ComWrapper.Telnet();
 			else if (wraptype == ComWrapper.WrapperType.LaserWebESP8266 && (com == null || com.GetType() != typeof(ComWrapper.LaserWebESP8266)))
 				com = new ComWrapper.LaserWebESP8266();
+			else if (wraptype == ComWrapper.WrapperType.Emulator && (com == null || com.GetType() != typeof(ComWrapper.Emulator)))
+				com = new ComWrapper.Emulator();
 
 			com.Configure(conf);
 		}
@@ -746,7 +757,6 @@ namespace LaserGRBL
 				if (com.IsOpen)
 					com.Close(!user);
 
-				mGrblVersion = null;
 				mBuffer = 0;
 				mTP.JobEnd();
 
@@ -779,27 +789,33 @@ namespace LaserGRBL
 		{ SendImmediate(64); }
 
 		private void QueryPosition()
-		{SendImmediate(63, true);}
+		{ SendImmediate(63, true); }
 
-		public void GrblReset(bool user)
+		public void GrblReset() //da comando manuale esterno (pulsante)
 		{
 			if (CanResetGrbl)
 			{
-				if (user && mTP.LastIssue == DetectedIssue.Unknown && MachineStatus == MacStatus.Run && InProgram)
+				if (mTP.LastIssue == DetectedIssue.Unknown && MachineStatus == MacStatus.Run && InProgram)
 					SetIssue(DetectedIssue.ManualReset);
-
-				lock (this)
-				{
-					ClearQueue(true);
-					mBuffer = 0;
-					mTP.JobEnd();
-					mCurOvFeed = mCurOvRapids = mCurOvSpindle = 100;
-					mTarOvFeed = mTarOvRapids = mTarOvSpindle = 100;
-					SendImmediate(24);
-				}
-
-				RiseOverrideChanged();
+				InternalReset(true);
 			}
+		}
+
+		private void InternalReset(bool grbl)
+		{
+			lock (this)
+			{
+				ClearQueue(true);
+				mBuffer = 0;
+				mTP.JobEnd();
+				mCurOvFeed = mCurOvRapids = mCurOvSpindle = 100;
+				mTarOvFeed = mTarOvRapids = mTarOvSpindle = 100;
+
+				if (grbl)
+					SendImmediate(24);
+			}
+
+			RiseOverrideChanged();
 		}
 
 		public void SendImmediate(byte b, bool mute = false)
@@ -944,7 +960,7 @@ namespace LaserGRBL
 		{
 			lock (this)
 			{
-				GrblReset(false);
+				InternalReset((bool)Settings.GetObject("Reset Grbl On Connect", true));
 				QueryPosition();
 				QueryTimer.Start();
 			}
@@ -1578,16 +1594,16 @@ namespace LaserGRBL
 		}
 
 		internal void HelpOnLine()
-		{System.Diagnostics.Process.Start(@"http://lasergrbl.com/usage/");}
+		{ System.Diagnostics.Process.Start(@"http://lasergrbl.com/usage/"); }
 
 		internal void GrblHoming()
-		{if (CanDoHoming)EnqueueCommand(new GrblCommand("$H"));}
+		{ if (CanDoHoming)EnqueueCommand(new GrblCommand("$H")); }
 
 		internal void GrblUnlock()
-		{if(CanUnlock) EnqueueCommand(new GrblCommand("$X"));}
+		{ if (CanUnlock) EnqueueCommand(new GrblCommand("$X")); }
 
 		internal void SetNewZero()
-		{if (CanDoZeroing) EnqueueCommand(new GrblCommand("G92 X0 Y0"));}
+		{ if (CanDoZeroing) EnqueueCommand(new GrblCommand("G92 X0 Y0")); }
 
 		public int JogSpeed { get; set; }
 
@@ -1612,38 +1628,54 @@ namespace LaserGRBL
 				ExecuteCustombutton(cb.GCode);
 		}
 
+		static System.Text.RegularExpressions.Regex bracketsRegEx = new System.Text.RegularExpressions.Regex(@"\[(?:[^]]+)\]");
 		internal void ExecuteCustombutton(string buttoncode)
 		{
 			string[] arr = buttoncode.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
 			foreach (string str in arr)
 			{
-				string command = str;
-				if (command.Trim().Length > 0)
+				if (str.Trim().Length > 0)
 				{
-					decimal left = LoadedFile != null && LoadedFile.Range.DrawingRange.ValidRange ? LoadedFile.Range.DrawingRange.X.Min : 0;
-					decimal right = LoadedFile != null && LoadedFile.Range.DrawingRange.ValidRange ? LoadedFile.Range.DrawingRange.X.Max : 0;
-					decimal top = LoadedFile != null && LoadedFile.Range.DrawingRange.ValidRange ? LoadedFile.Range.DrawingRange.Y.Max : 0;
-					decimal bottom = LoadedFile != null && LoadedFile.Range.DrawingRange.ValidRange ? LoadedFile.Range.DrawingRange.Y.Min : 0;
-
-					decimal width = right - left;
-					decimal height = top - bottom;
-
-					command = command.Replace("[left]", FormatNumber(left));
-					command = command.Replace("[right]", FormatNumber(right));
-					command = command.Replace("[top]", FormatNumber(top));
-					command = command.Replace("[bottom]", FormatNumber(bottom));
-
-					command = command.Replace("[width]", FormatNumber(width));
-					command = command.Replace("[height]", FormatNumber(height));
-
-					EnqueueCommand(new GrblCommand(command));
+					string tosend = bracketsRegEx.Replace(str, new System.Text.RegularExpressions.MatchEvaluator(EvaluateCB));
+					EnqueueCommand(new GrblCommand(tosend));
 				}
 			}
 		}
 
-		static string FormatNumber(decimal value)
-		{return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.000}", value);}
+
+		private string EvaluateCB(System.Text.RegularExpressions.Match m)
+		{
+			try
+			{
+				decimal left = LoadedFile != null && LoadedFile.Range.DrawingRange.ValidRange ? LoadedFile.Range.DrawingRange.X.Min : 0;
+				decimal right = LoadedFile != null && LoadedFile.Range.DrawingRange.ValidRange ? LoadedFile.Range.DrawingRange.X.Max : 0;
+				decimal top = LoadedFile != null && LoadedFile.Range.DrawingRange.ValidRange ? LoadedFile.Range.DrawingRange.Y.Max : 0;
+				decimal bottom = LoadedFile != null && LoadedFile.Range.DrawingRange.ValidRange ? LoadedFile.Range.DrawingRange.Y.Min : 0;
+				decimal width = right - left;
+				decimal height = top - bottom;
+				decimal jogstep = JogStep;
+				decimal jogspeed = JogSpeed;
+
+				String text = m.Value.Substring(1, m.Value.Length - 2);
+				Tools.Expression exp = new Tools.Expression(text);
 				
+				exp.AddSetVariable("left", (double)left);
+				exp.AddSetVariable("right", (double)right);
+				exp.AddSetVariable("top", (double)top);
+				exp.AddSetVariable("bottom", (double)bottom);
+				exp.AddSetVariable("width", (double)width);
+				exp.AddSetVariable("height", (double)height);
+				exp.AddSetVariable("jogstep", (double)jogstep);
+				exp.AddSetVariable("jogspeed", (double)jogspeed);
+				double dval = exp.EvaluateD();
+				return m.Result(FormatNumber((decimal)dval));
+			}
+			catch { return m.Value; }
+		}
+
+		static string FormatNumber(decimal value)
+		{ return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0:0.000}", value); }
+
 	}
 
 	public class TimeProjection
@@ -1671,8 +1703,8 @@ namespace LaserGRBL
 
 		public System.Drawing.PointF LastKnownWCO
 		{
-			get {return mLastKnownWCO;}
-			set {if (InProgram) mLastKnownWCO = value; }
+			get { return mLastKnownWCO; }
+			set { if (InProgram) mLastKnownWCO = value; }
 		}
 
 		public TimeProjection()
@@ -1868,7 +1900,7 @@ namespace LaserGRBL
 	}
 
 	[Serializable]
-	public class GrblConf
+	public class GrblConf : System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<int, decimal>>
 	{
 		public class GrblConfParam : ICloneable
 		{
@@ -1901,13 +1933,24 @@ namespace LaserGRBL
 
 			public object Clone()
 			{ return this.MemberwiseClone(); }
+
 		}
 
 		private System.Collections.Generic.Dictionary<int, decimal> mData;
 		private GrblCore.GrblVersionInfo mVersion;
 
-		public GrblConf(GrblCore.GrblVersionInfo GrblVersion) : this()
-		{ mVersion = GrblVersion; }
+		public GrblConf(GrblCore.GrblVersionInfo GrblVersion)
+			: this()
+		{
+			mVersion = GrblVersion;
+		}
+
+		public GrblConf(GrblCore.GrblVersionInfo GrblVersion, System.Collections.Generic.Dictionary<int, decimal> configTable)
+			: this(GrblVersion)
+		{
+			foreach (System.Collections.Generic.KeyValuePair<int, decimal> kvp in configTable)
+				mData.Add(kvp.Key, kvp.Value);
+		}
 
 		public GrblConf()
 		{ mData = new System.Collections.Generic.Dictionary<int, decimal>(); }
@@ -1938,12 +1981,12 @@ namespace LaserGRBL
 
 		public bool LaserMode
 		{
-			get 
+			get
 			{
 				if (NoVersionInfo)
 					return true;
 				else
-					return ReadWithDefault(Version11 ? 32 : -1, 0) != 0; 
+					return ReadWithDefault(Version11 ? 32 : -1, 0) != 0;
 			}
 		}
 
@@ -1952,7 +1995,7 @@ namespace LaserGRBL
 
 		public decimal MaxPWM
 		{ get { return ReadWithDefault(Version11 ? 30 : -1, 1000); } }
-		
+
 		public decimal ResolutionX
 		{ get { return ReadWithDefault(Version9 ? 100 : 0, 250); } }
 
@@ -2008,6 +2051,26 @@ namespace LaserGRBL
 				return true;
 			else
 				return false;
+		}
+
+		internal bool ContainsKey(int key)
+		{
+			return mData.ContainsKey(key);
+		}
+
+		internal void SetValue(int key, decimal value)
+		{
+			mData[key] = value;
+		}
+
+		public System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<int, decimal>> GetEnumerator()
+		{
+			return mData.GetEnumerator();
+		}
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			return mData.GetEnumerator();
 		}
 	}
 }

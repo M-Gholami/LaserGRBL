@@ -100,14 +100,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColorScheme.cs" />
+    <Compile Include="ComWrapper\Emulator.cs" />
     <Compile Include="GrblConfig.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GrblConfig.Designer.cs">
       <DependentUpon>GrblConfig.cs</DependentUpon>
     </Compile>
-    <Compile Include="GrblEmulator\Console.cs" />
-    <Compile Include="GrblEmulator\GrblEmulator.cs" />
+    <Compile Include="GrblEmulator\EmulatorUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GrblEmulator\EmulatorUI.Designer.cs">
+      <DependentUpon>EmulatorUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GrblEmulator\Grblv11Emulator.cs" />
+    <Compile Include="GrblEmulator\WebsocketEmulator.cs" />
     <Compile Include="ComWrapper\IComWrapper.cs" />
     <Compile Include="ComWrapper\LaserWebESP8266.cs" />
     <Compile Include="ComWrapper\UsbSerial.cs" />
@@ -321,6 +328,7 @@
       <DependentUpon>SplashScreenForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Tools\Cronometro.cs" />
+    <Compile Include="Tools\ExpressionEvaluator.cs" />
     <Compile Include="Tools\HiResTimer.cs" />
     <Compile Include="Tools\InputBox.cs">
       <SubType>Form</SubType>
@@ -422,6 +430,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ConnectLogForm.resx">
       <DependentUpon>ConnectLogForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ConnectLogForm.ru.resx">
       <DependentUpon>ConnectLogForm.cs</DependentUpon>
@@ -441,6 +450,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CustomButtonForm.resx">
       <DependentUpon>CustomButtonForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GrblEmulator\EmulatorUI.resx">
+      <DependentUpon>EmulatorUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HotkeyManagerForm.resx">
       <DependentUpon>HotkeyManagerForm.cs</DependentUpon>
