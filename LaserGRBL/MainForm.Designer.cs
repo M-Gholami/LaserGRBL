@@ -37,22 +37,23 @@
 			this.StatusBar = new System.Windows.Forms.StatusStrip();
 			this.TTLLines = new System.Windows.Forms.ToolStripStatusLabel();
 			this.TTTLines = new System.Windows.Forms.ToolStripStatusLabel();
-			this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+			this.TTLBuffer = new System.Windows.Forms.ToolStripStatusLabel();
 			this.PbBuffer = new System.Windows.Forms.ToolStripProgressBar();
 			this.TTLEstimated = new System.Windows.Forms.ToolStripStatusLabel();
 			this.TTTEstimated = new System.Windows.Forms.ToolStripStatusLabel();
-			this.spring1 = new System.Windows.Forms.ToolStripStatusLabel();
-			this.TTOvG0 = new System.Windows.Forms.ToolStripStatusLabel();
-			this.TTOvG1 = new System.Windows.Forms.ToolStripStatusLabel();
+			this.TTLinkToNews = new System.Windows.Forms.ToolStripStatusLabel();
 			this.TTOvS = new System.Windows.Forms.ToolStripStatusLabel();
+			this.TTOvG1 = new System.Windows.Forms.ToolStripStatusLabel();
+			this.TTOvG0 = new System.Windows.Forms.ToolStripStatusLabel();
 			this.spacer = new System.Windows.Forms.ToolStripStatusLabel();
 			this.TTLStatus = new System.Windows.Forms.ToolStripStatusLabel();
 			this.TTTStatus = new System.Windows.Forms.ToolStripStatusLabel();
 			this.UpdateTimer = new System.Windows.Forms.Timer(this.components);
 			this.MMn = new System.Windows.Forms.MenuStrip();
-			this.grblToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.MnGrbl = new System.Windows.Forms.ToolStripMenuItem();
 			this.MnConnect = new System.Windows.Forms.ToolStripMenuItem();
 			this.MnDisconnect = new System.Windows.Forms.ToolStripMenuItem();
+			this.MnWiFiDiscovery = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
 			this.MnGrblReset = new System.Windows.Forms.ToolStripMenuItem();
 			this.MnGoHome = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,15 +61,22 @@
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.MnGrblConfig = new System.Windows.Forms.ToolStripMenuItem();
 			this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.MnMaterialDB = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.MnHotkeys = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripSeparator();
 			this.MnExit = new System.Windows.Forms.ToolStripMenuItem();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.MnFileOpen = new System.Windows.Forms.ToolStripMenuItem();
+			this.MnFileAppend = new System.Windows.Forms.ToolStripMenuItem();
 			this.MnReOpenFile = new System.Windows.Forms.ToolStripMenuItem();
 			this.MnSaveProgram = new System.Windows.Forms.ToolStripMenuItem();
+			this.MnAdvancedSave = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.MnFileSend = new System.Windows.Forms.ToolStripMenuItem();
+			this.MnStartFromPosition = new System.Windows.Forms.ToolStripMenuItem();
+			this.MnRunMultiSep = new System.Windows.Forms.ToolStripSeparator();
+			this.MnRunMulti = new System.Windows.Forms.ToolStripMenuItem();
 			this.MNEsp8266 = new System.Windows.Forms.ToolStripMenuItem();
 			this.MNGrblEmulator = new System.Windows.Forms.ToolStripMenuItem();
 			this.schemaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -76,6 +84,7 @@
 			this.redLaserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.darkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.hackerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.nightyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.linguaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.MNEnglish = new System.Windows.Forms.ToolStripMenuItem();
 			this.MNItalian = new System.Windows.Forms.ToolStripMenuItem();
@@ -86,15 +95,46 @@
 			this.MNBrazilian = new System.Windows.Forms.ToolStripMenuItem();
 			this.russianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.chinexeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-			this.helpOnLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.autoUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.traditionalChineseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.slovakianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.hungarianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.czechToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.polishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.greekToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.installCH340DriverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.flashGrblFirmwareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+			this.configurationWizardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.MnOrtur = new System.Windows.Forms.ToolStripMenuItem();
+			this.orturSupportGroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.orturSupportAndFeedbackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.orturWebsiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.youtubeChannelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+			this.manualsDownloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.firmwareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.questionMarkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.MnAutoUpdate = new System.Windows.Forms.ToolStripMenuItem();
+			this.MnNotifyNewVersion = new System.Windows.Forms.ToolStripMenuItem();
+			this.MnNotifyMinorVersion = new System.Windows.Forms.ToolStripMenuItem();
+			this.MnNotifyPreRelease = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
+			this.MnCheckNow = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
 			this.openSessionLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.activateExtendedLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
-			this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.helpOnLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.facebookCommunityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+			this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.licenseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.AwakeTimer = new System.Windows.Forms.Timer(this.components);
+			this.MultipleInstanceTimer = new System.Windows.Forms.Timer(this.components);
+			this.turkishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -138,19 +178,20 @@
 			this.StatusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TTLLines,
             this.TTTLines,
-            this.toolStripStatusLabel1,
+            this.TTLBuffer,
             this.PbBuffer,
             this.TTLEstimated,
             this.TTTEstimated,
-            this.spring1,
-            this.TTOvG0,
-            this.TTOvG1,
+            this.TTLinkToNews,
             this.TTOvS,
+            this.TTOvG1,
+            this.TTOvG0,
             this.spacer,
             this.TTLStatus,
             this.TTTStatus});
 			resources.ApplyResources(this.StatusBar, "StatusBar");
 			this.StatusBar.Name = "StatusBar";
+			this.StatusBar.ShowItemToolTips = true;
 			// 
 			// TTLLines
 			// 
@@ -162,11 +203,11 @@
 			this.TTTLines.Name = "TTTLines";
 			resources.ApplyResources(this.TTTLines, "TTTLines");
 			// 
-			// toolStripStatusLabel1
+			// TTLBuffer
 			// 
-			this.toolStripStatusLabel1.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
-			this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-			resources.ApplyResources(this.toolStripStatusLabel1, "toolStripStatusLabel1");
+			this.TTLBuffer.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
+			this.TTLBuffer.Name = "TTLBuffer";
+			resources.ApplyResources(this.TTLBuffer, "TTLBuffer");
 			// 
 			// PbBuffer
 			// 
@@ -188,19 +229,21 @@
 			this.TTTEstimated.Name = "TTTEstimated";
 			resources.ApplyResources(this.TTTEstimated, "TTTEstimated");
 			// 
-			// spring1
+			// TTLinkToNews
 			// 
-			this.spring1.Name = "spring1";
-			resources.ApplyResources(this.spring1, "spring1");
-			this.spring1.Spring = true;
+			resources.ApplyResources(this.TTLinkToNews, "TTLinkToNews");
+			this.TTLinkToNews.IsLink = true;
+			this.TTLinkToNews.Name = "TTLinkToNews";
+			this.TTLinkToNews.Spring = true;
+			this.TTLinkToNews.Click += new System.EventHandler(this.TTLinkToNews_Click);
 			// 
-			// TTOvG0
+			// TTOvS
 			// 
-			resources.ApplyResources(this.TTOvG0, "TTOvG0");
-			this.TTOvG0.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
-			this.TTOvG0.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
-			this.TTOvG0.Name = "TTOvG0";
-			this.TTOvG0.Click += new System.EventHandler(this.TTOvClick);
+			resources.ApplyResources(this.TTOvS, "TTOvS");
+			this.TTOvS.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
+			this.TTOvS.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
+			this.TTOvS.Name = "TTOvS";
+			this.TTOvS.Click += new System.EventHandler(this.TTOvClick);
 			// 
 			// TTOvG1
 			// 
@@ -210,13 +253,13 @@
 			this.TTOvG1.Name = "TTOvG1";
 			this.TTOvG1.Click += new System.EventHandler(this.TTOvClick);
 			// 
-			// TTOvS
+			// TTOvG0
 			// 
-			resources.ApplyResources(this.TTOvS, "TTOvS");
-			this.TTOvS.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
-			this.TTOvS.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
-			this.TTOvS.Name = "TTOvS";
-			this.TTOvS.Click += new System.EventHandler(this.TTOvClick);
+			resources.ApplyResources(this.TTOvG0, "TTOvG0");
+			this.TTOvG0.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Left;
+			this.TTOvG0.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
+			this.TTOvG0.Name = "TTOvG0";
+			this.TTOvG0.Click += new System.EventHandler(this.TTOvClick);
 			// 
 			// spacer
 			// 
@@ -242,20 +285,23 @@
 			// MMn
 			// 
 			this.MMn.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.grblToolStripMenuItem,
+            this.MnGrbl,
             this.fileToolStripMenuItem,
             this.MNEsp8266,
             this.schemaToolStripMenuItem,
             this.linguaToolStripMenuItem,
-            this.toolStripMenuItem4});
+            this.toolsToolStripMenuItem,
+            this.MnOrtur,
+            this.questionMarkToolStripMenuItem});
 			resources.ApplyResources(this.MMn, "MMn");
 			this.MMn.Name = "MMn";
 			// 
-			// grblToolStripMenuItem
+			// MnGrbl
 			// 
-			this.grblToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.MnGrbl.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MnConnect,
             this.MnDisconnect,
+            this.MnWiFiDiscovery,
             this.toolStripMenuItem2,
             this.MnGrblReset,
             this.MnGoHome,
@@ -263,12 +309,13 @@
             this.toolStripSeparator1,
             this.MnGrblConfig,
             this.settingsToolStripMenuItem,
+            this.MnMaterialDB,
             this.toolStripSeparator2,
             this.MnHotkeys,
             this.toolStripMenuItem6,
             this.MnExit});
-			this.grblToolStripMenuItem.Name = "grblToolStripMenuItem";
-			resources.ApplyResources(this.grblToolStripMenuItem, "grblToolStripMenuItem");
+			this.MnGrbl.Name = "MnGrbl";
+			resources.ApplyResources(this.MnGrbl, "MnGrbl");
 			// 
 			// MnConnect
 			// 
@@ -281,6 +328,12 @@
 			resources.ApplyResources(this.MnDisconnect, "MnDisconnect");
 			this.MnDisconnect.Name = "MnDisconnect";
 			this.MnDisconnect.Click += new System.EventHandler(this.MnDisconnect_Click);
+			// 
+			// MnWiFiDiscovery
+			// 
+			resources.ApplyResources(this.MnWiFiDiscovery, "MnWiFiDiscovery");
+			this.MnWiFiDiscovery.Name = "MnWiFiDiscovery";
+			this.MnWiFiDiscovery.Click += new System.EventHandler(this.MnWiFiDiscovery_Click);
 			// 
 			// toolStripMenuItem2
 			// 
@@ -322,6 +375,17 @@
 			this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
 			this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
 			// 
+			// MnMaterialDB
+			// 
+			resources.ApplyResources(this.MnMaterialDB, "MnMaterialDB");
+			this.MnMaterialDB.Name = "MnMaterialDB";
+			this.MnMaterialDB.Click += new System.EventHandler(this.MnMaterialDB_Click);
+			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
+			// 
 			// MnHotkeys
 			// 
 			resources.ApplyResources(this.MnHotkeys, "MnHotkeys");
@@ -343,10 +407,15 @@
 			// 
 			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MnFileOpen,
+            this.MnFileAppend,
             this.MnReOpenFile,
             this.MnSaveProgram,
+            this.MnAdvancedSave,
             this.toolStripMenuItem1,
-            this.MnFileSend});
+            this.MnFileSend,
+            this.MnStartFromPosition,
+            this.MnRunMultiSep,
+            this.MnRunMulti});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
 			resources.ApplyResources(this.fileToolStripMenuItem, "fileToolStripMenuItem");
 			this.fileToolStripMenuItem.DropDownOpening += new System.EventHandler(this.fileToolStripMenuItem_DropDownOpening);
@@ -356,6 +425,12 @@
 			resources.ApplyResources(this.MnFileOpen, "MnFileOpen");
 			this.MnFileOpen.Name = "MnFileOpen";
 			this.MnFileOpen.Click += new System.EventHandler(this.MnFileOpen_Click);
+			// 
+			// MnFileAppend
+			// 
+			resources.ApplyResources(this.MnFileAppend, "MnFileAppend");
+			this.MnFileAppend.Name = "MnFileAppend";
+			this.MnFileAppend.Click += new System.EventHandler(this.MnFileAppend_Click);
 			// 
 			// MnReOpenFile
 			// 
@@ -369,6 +444,12 @@
 			this.MnSaveProgram.Name = "MnSaveProgram";
 			this.MnSaveProgram.Click += new System.EventHandler(this.MnSaveProgramClick);
 			// 
+			// MnAdvancedSave
+			// 
+			resources.ApplyResources(this.MnAdvancedSave, "MnAdvancedSave");
+			this.MnAdvancedSave.Name = "MnAdvancedSave";
+			this.MnAdvancedSave.Click += new System.EventHandler(this.MnAdvancedSave_Click);
+			// 
 			// toolStripMenuItem1
 			// 
 			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
@@ -379,6 +460,23 @@
 			resources.ApplyResources(this.MnFileSend, "MnFileSend");
 			this.MnFileSend.Name = "MnFileSend";
 			this.MnFileSend.Click += new System.EventHandler(this.MnFileSend_Click);
+			// 
+			// MnStartFromPosition
+			// 
+			resources.ApplyResources(this.MnStartFromPosition, "MnStartFromPosition");
+			this.MnStartFromPosition.Name = "MnStartFromPosition";
+			this.MnStartFromPosition.Click += new System.EventHandler(this.MnStartFromPosition_Click);
+			// 
+			// MnRunMultiSep
+			// 
+			this.MnRunMultiSep.Name = "MnRunMultiSep";
+			resources.ApplyResources(this.MnRunMultiSep, "MnRunMultiSep");
+			// 
+			// MnRunMulti
+			// 
+			resources.ApplyResources(this.MnRunMulti, "MnRunMulti");
+			this.MnRunMulti.Name = "MnRunMulti";
+			this.MnRunMulti.Click += new System.EventHandler(this.MnRunMulti_Click);
 			// 
 			// MNEsp8266
 			// 
@@ -399,7 +497,8 @@
             this.blueLaserToolStripMenuItem,
             this.redLaserToolStripMenuItem,
             this.darkToolStripMenuItem,
-            this.hackerToolStripMenuItem});
+            this.hackerToolStripMenuItem,
+            this.nightyToolStripMenuItem});
 			this.schemaToolStripMenuItem.Name = "schemaToolStripMenuItem";
 			resources.ApplyResources(this.schemaToolStripMenuItem, "schemaToolStripMenuItem");
 			// 
@@ -427,6 +526,12 @@
 			resources.ApplyResources(this.hackerToolStripMenuItem, "hackerToolStripMenuItem");
 			this.hackerToolStripMenuItem.Click += new System.EventHandler(this.hackerToolStripMenuItem_Click);
 			// 
+			// nightyToolStripMenuItem
+			// 
+			this.nightyToolStripMenuItem.Name = "nightyToolStripMenuItem";
+			resources.ApplyResources(this.nightyToolStripMenuItem, "nightyToolStripMenuItem");
+			this.nightyToolStripMenuItem.Click += new System.EventHandler(this.nightyToolStripMenuItem_Click);
+			// 
 			// linguaToolStripMenuItem
 			// 
 			this.linguaToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -438,7 +543,14 @@
             this.MNDanish,
             this.MNBrazilian,
             this.russianToolStripMenuItem,
-            this.chinexeToolStripMenuItem});
+            this.chinexeToolStripMenuItem,
+            this.traditionalChineseToolStripMenuItem,
+            this.slovakianToolStripMenuItem,
+            this.hungarianToolStripMenuItem,
+            this.czechToolStripMenuItem,
+            this.polishToolStripMenuItem,
+            this.greekToolStripMenuItem,
+            this.turkishToolStripMenuItem});
 			this.linguaToolStripMenuItem.Name = "linguaToolStripMenuItem";
 			resources.ApplyResources(this.linguaToolStripMenuItem, "linguaToolStripMenuItem");
 			// 
@@ -494,35 +606,191 @@
 			// 
 			resources.ApplyResources(this.chinexeToolStripMenuItem, "chinexeToolStripMenuItem");
 			this.chinexeToolStripMenuItem.Name = "chinexeToolStripMenuItem";
-			this.chinexeToolStripMenuItem.Click += new System.EventHandler(this.chinexeToolStripMenuItem_Click);
+			this.chinexeToolStripMenuItem.Click += new System.EventHandler(this.chineseToolStripMenuItem_Click);
+			// 
+			// traditionalChineseToolStripMenuItem
+			// 
+			resources.ApplyResources(this.traditionalChineseToolStripMenuItem, "traditionalChineseToolStripMenuItem");
+			this.traditionalChineseToolStripMenuItem.Name = "traditionalChineseToolStripMenuItem";
+			this.traditionalChineseToolStripMenuItem.Click += new System.EventHandler(this.traditionalChineseToolStripMenuItem_Click);
+			// 
+			// slovakianToolStripMenuItem
+			// 
+			resources.ApplyResources(this.slovakianToolStripMenuItem, "slovakianToolStripMenuItem");
+			this.slovakianToolStripMenuItem.Name = "slovakianToolStripMenuItem";
+			this.slovakianToolStripMenuItem.Click += new System.EventHandler(this.slovakToolStripMenuItem_Click);
+			// 
+			// hungarianToolStripMenuItem
+			// 
+			resources.ApplyResources(this.hungarianToolStripMenuItem, "hungarianToolStripMenuItem");
+			this.hungarianToolStripMenuItem.Name = "hungarianToolStripMenuItem";
+			this.hungarianToolStripMenuItem.Click += new System.EventHandler(this.hungarianToolStripMenuItem_Click);
+			// 
+			// czechToolStripMenuItem
+			// 
+			resources.ApplyResources(this.czechToolStripMenuItem, "czechToolStripMenuItem");
+			this.czechToolStripMenuItem.Name = "czechToolStripMenuItem";
+			this.czechToolStripMenuItem.Click += new System.EventHandler(this.czechToolStripMenuItem_Click);
+			// 
+			// polishToolStripMenuItem
+			// 
+			resources.ApplyResources(this.polishToolStripMenuItem, "polishToolStripMenuItem");
+			this.polishToolStripMenuItem.Name = "polishToolStripMenuItem";
+			this.polishToolStripMenuItem.Click += new System.EventHandler(this.polishToolStripMenuItem_Click);
+			// 
+			// greekToolStripMenuItem
+			// 
+			resources.ApplyResources(this.greekToolStripMenuItem, "greekToolStripMenuItem");
+			this.greekToolStripMenuItem.Name = "greekToolStripMenuItem";
+			this.greekToolStripMenuItem.Click += new System.EventHandler(this.greekToolStripMenuItem_Click);
+			// 
+			// toolsToolStripMenuItem
+			// 
+			this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.installCH340DriverToolStripMenuItem,
+            this.flashGrblFirmwareToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.configurationWizardToolStripMenuItem});
+			this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+			resources.ApplyResources(this.toolsToolStripMenuItem, "toolsToolStripMenuItem");
+			this.toolsToolStripMenuItem.DropDownOpening += new System.EventHandler(this.toolsToolStripMenuItem_DropDownOpening);
+			// 
+			// installCH340DriverToolStripMenuItem
+			// 
+			resources.ApplyResources(this.installCH340DriverToolStripMenuItem, "installCH340DriverToolStripMenuItem");
+			this.installCH340DriverToolStripMenuItem.Name = "installCH340DriverToolStripMenuItem";
+			this.installCH340DriverToolStripMenuItem.Click += new System.EventHandler(this.installCH340DriverToolStripMenuItem_Click);
+			// 
+			// flashGrblFirmwareToolStripMenuItem
+			// 
+			resources.ApplyResources(this.flashGrblFirmwareToolStripMenuItem, "flashGrblFirmwareToolStripMenuItem");
+			this.flashGrblFirmwareToolStripMenuItem.Name = "flashGrblFirmwareToolStripMenuItem";
+			this.flashGrblFirmwareToolStripMenuItem.Click += new System.EventHandler(this.flashGrblFirmwareToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator3
+			// 
+			this.toolStripSeparator3.Name = "toolStripSeparator3";
+			resources.ApplyResources(this.toolStripSeparator3, "toolStripSeparator3");
+			// 
+			// configurationWizardToolStripMenuItem
+			// 
+			resources.ApplyResources(this.configurationWizardToolStripMenuItem, "configurationWizardToolStripMenuItem");
+			this.configurationWizardToolStripMenuItem.Name = "configurationWizardToolStripMenuItem";
+			// 
+			// MnOrtur
+			// 
+			this.MnOrtur.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.orturSupportGroupToolStripMenuItem,
+            this.orturSupportAndFeedbackToolStripMenuItem,
+            this.orturWebsiteToolStripMenuItem,
+            this.youtubeChannelToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.manualsDownloadToolStripMenuItem,
+            this.firmwareToolStripMenuItem});
+			this.MnOrtur.Name = "MnOrtur";
+			resources.ApplyResources(this.MnOrtur, "MnOrtur");
+			// 
+			// orturSupportGroupToolStripMenuItem
+			// 
+			resources.ApplyResources(this.orturSupportGroupToolStripMenuItem, "orturSupportGroupToolStripMenuItem");
+			this.orturSupportGroupToolStripMenuItem.Name = "orturSupportGroupToolStripMenuItem";
+			this.orturSupportGroupToolStripMenuItem.Click += new System.EventHandler(this.orturSupportGroupToolStripMenuItem_Click);
+			// 
+			// orturSupportAndFeedbackToolStripMenuItem
+			// 
+			resources.ApplyResources(this.orturSupportAndFeedbackToolStripMenuItem, "orturSupportAndFeedbackToolStripMenuItem");
+			this.orturSupportAndFeedbackToolStripMenuItem.Name = "orturSupportAndFeedbackToolStripMenuItem";
+			this.orturSupportAndFeedbackToolStripMenuItem.Click += new System.EventHandler(this.orturSupportAndFeedbackToolStripMenuItem_Click);
+			// 
+			// orturWebsiteToolStripMenuItem
+			// 
+			resources.ApplyResources(this.orturWebsiteToolStripMenuItem, "orturWebsiteToolStripMenuItem");
+			this.orturWebsiteToolStripMenuItem.Name = "orturWebsiteToolStripMenuItem";
+			this.orturWebsiteToolStripMenuItem.Click += new System.EventHandler(this.orturWebsiteToolStripMenuItem_Click);
+			// 
+			// youtubeChannelToolStripMenuItem
+			// 
+			resources.ApplyResources(this.youtubeChannelToolStripMenuItem, "youtubeChannelToolStripMenuItem");
+			this.youtubeChannelToolStripMenuItem.Name = "youtubeChannelToolStripMenuItem";
+			this.youtubeChannelToolStripMenuItem.Click += new System.EventHandler(this.youtubeChannelToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator4
+			// 
+			this.toolStripSeparator4.Name = "toolStripSeparator4";
+			resources.ApplyResources(this.toolStripSeparator4, "toolStripSeparator4");
+			// 
+			// manualsDownloadToolStripMenuItem
+			// 
+			resources.ApplyResources(this.manualsDownloadToolStripMenuItem, "manualsDownloadToolStripMenuItem");
+			this.manualsDownloadToolStripMenuItem.Name = "manualsDownloadToolStripMenuItem";
+			this.manualsDownloadToolStripMenuItem.Click += new System.EventHandler(this.manualsDownloadToolStripMenuItem_Click);
+			// 
+			// firmwareToolStripMenuItem
+			// 
+			resources.ApplyResources(this.firmwareToolStripMenuItem, "firmwareToolStripMenuItem");
+			this.firmwareToolStripMenuItem.Name = "firmwareToolStripMenuItem";
+			this.firmwareToolStripMenuItem.Click += new System.EventHandler(this.firmwareToolStripMenuItem_Click);
+			// 
+			// questionMarkToolStripMenuItem
+			// 
+			this.questionMarkToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MnAutoUpdate,
+            this.toolStripMenuItem5,
+            this.openSessionLogToolStripMenuItem,
+            this.activateExtendedLogToolStripMenuItem,
+            this.toolStripMenuItem7,
+            this.helpOnLineToolStripMenuItem,
+            this.aboutToolStripMenuItem,
+            this.facebookCommunityToolStripMenuItem,
+            this.toolStripMenuItem3,
+            this.donateToolStripMenuItem,
+            this.licenseToolStripMenuItem});
+			this.questionMarkToolStripMenuItem.Name = "questionMarkToolStripMenuItem";
+			resources.ApplyResources(this.questionMarkToolStripMenuItem, "questionMarkToolStripMenuItem");
+			this.questionMarkToolStripMenuItem.DropDownOpening += new System.EventHandler(this.toolStripMenuItem4_DropDownOpening);
+			// 
+			// MnAutoUpdate
+			// 
+			this.MnAutoUpdate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MnNotifyNewVersion,
+            this.MnNotifyMinorVersion,
+            this.MnNotifyPreRelease,
+            this.toolStripMenuItem4,
+            this.MnCheckNow});
+			this.MnAutoUpdate.Name = "MnAutoUpdate";
+			resources.ApplyResources(this.MnAutoUpdate, "MnAutoUpdate");
+			// 
+			// MnNotifyNewVersion
+			// 
+			this.MnNotifyNewVersion.Checked = true;
+			this.MnNotifyNewVersion.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.MnNotifyNewVersion.Name = "MnNotifyNewVersion";
+			resources.ApplyResources(this.MnNotifyNewVersion, "MnNotifyNewVersion");
+			this.MnNotifyNewVersion.CheckedChanged += new System.EventHandler(this.MnNotifyNewVersion_CheckedChanged);
+			this.MnNotifyNewVersion.Click += new System.EventHandler(this.MnNotifyNewVersion_Click);
+			// 
+			// MnNotifyMinorVersion
+			// 
+			this.MnNotifyMinorVersion.Name = "MnNotifyMinorVersion";
+			resources.ApplyResources(this.MnNotifyMinorVersion, "MnNotifyMinorVersion");
+			this.MnNotifyMinorVersion.Click += new System.EventHandler(this.MnNotifyMinorVersion_Click);
+			// 
+			// MnNotifyPreRelease
+			// 
+			this.MnNotifyPreRelease.Name = "MnNotifyPreRelease";
+			resources.ApplyResources(this.MnNotifyPreRelease, "MnNotifyPreRelease");
+			this.MnNotifyPreRelease.Click += new System.EventHandler(this.MnNotifyPreRelease_Click);
 			// 
 			// toolStripMenuItem4
 			// 
-			this.toolStripMenuItem4.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.helpOnLineToolStripMenuItem,
-            this.autoUpdateToolStripMenuItem,
-            this.toolStripMenuItem5,
-            this.openSessionLogToolStripMenuItem,
-            this.toolStripMenuItem7,
-            this.donateToolStripMenuItem,
-            this.aboutToolStripMenuItem});
 			this.toolStripMenuItem4.Name = "toolStripMenuItem4";
 			resources.ApplyResources(this.toolStripMenuItem4, "toolStripMenuItem4");
-			this.toolStripMenuItem4.DropDownOpening += new System.EventHandler(this.toolStripMenuItem4_DropDownOpening);
 			// 
-			// helpOnLineToolStripMenuItem
+			// MnCheckNow
 			// 
-			resources.ApplyResources(this.helpOnLineToolStripMenuItem, "helpOnLineToolStripMenuItem");
-			this.helpOnLineToolStripMenuItem.Name = "helpOnLineToolStripMenuItem";
-			this.helpOnLineToolStripMenuItem.Click += new System.EventHandler(this.helpOnLineToolStripMenuItem_Click);
-			// 
-			// autoUpdateToolStripMenuItem
-			// 
-			this.autoUpdateToolStripMenuItem.Checked = true;
-			this.autoUpdateToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.autoUpdateToolStripMenuItem.Name = "autoUpdateToolStripMenuItem";
-			resources.ApplyResources(this.autoUpdateToolStripMenuItem, "autoUpdateToolStripMenuItem");
-			this.autoUpdateToolStripMenuItem.Click += new System.EventHandler(this.autoUpdateToolStripMenuItem_Click);
+			this.MnCheckNow.Name = "MnCheckNow";
+			resources.ApplyResources(this.MnCheckNow, "MnCheckNow");
+			this.MnCheckNow.Click += new System.EventHandler(this.MnCheckNow_Click);
 			// 
 			// toolStripMenuItem5
 			// 
@@ -535,16 +803,22 @@
 			this.openSessionLogToolStripMenuItem.Name = "openSessionLogToolStripMenuItem";
 			this.openSessionLogToolStripMenuItem.Click += new System.EventHandler(this.openSessionLogToolStripMenuItem_Click);
 			// 
+			// activateExtendedLogToolStripMenuItem
+			// 
+			resources.ApplyResources(this.activateExtendedLogToolStripMenuItem, "activateExtendedLogToolStripMenuItem");
+			this.activateExtendedLogToolStripMenuItem.Name = "activateExtendedLogToolStripMenuItem";
+			this.activateExtendedLogToolStripMenuItem.Click += new System.EventHandler(this.activateExtendedLogToolStripMenuItem_Click);
+			// 
 			// toolStripMenuItem7
 			// 
 			this.toolStripMenuItem7.Name = "toolStripMenuItem7";
 			resources.ApplyResources(this.toolStripMenuItem7, "toolStripMenuItem7");
 			// 
-			// donateToolStripMenuItem
+			// helpOnLineToolStripMenuItem
 			// 
-			resources.ApplyResources(this.donateToolStripMenuItem, "donateToolStripMenuItem");
-			this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
-			this.donateToolStripMenuItem.Click += new System.EventHandler(this.donateToolStripMenuItem_Click);
+			resources.ApplyResources(this.helpOnLineToolStripMenuItem, "helpOnLineToolStripMenuItem");
+			this.helpOnLineToolStripMenuItem.Name = "helpOnLineToolStripMenuItem";
+			this.helpOnLineToolStripMenuItem.Click += new System.EventHandler(this.helpOnLineToolStripMenuItem_Click);
 			// 
 			// aboutToolStripMenuItem
 			// 
@@ -552,13 +826,49 @@
 			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
-			// toolStripSeparator2
+			// facebookCommunityToolStripMenuItem
 			// 
-			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			resources.ApplyResources(this.toolStripSeparator2, "toolStripSeparator2");
+			resources.ApplyResources(this.facebookCommunityToolStripMenuItem, "facebookCommunityToolStripMenuItem");
+			this.facebookCommunityToolStripMenuItem.Name = "facebookCommunityToolStripMenuItem";
+			this.facebookCommunityToolStripMenuItem.Click += new System.EventHandler(this.facebookCommunityToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem3
+			// 
+			this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+			resources.ApplyResources(this.toolStripMenuItem3, "toolStripMenuItem3");
+			// 
+			// donateToolStripMenuItem
+			// 
+			resources.ApplyResources(this.donateToolStripMenuItem, "donateToolStripMenuItem");
+			this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
+			this.donateToolStripMenuItem.Click += new System.EventHandler(this.donateToolStripMenuItem_Click);
+			// 
+			// licenseToolStripMenuItem
+			// 
+			resources.ApplyResources(this.licenseToolStripMenuItem, "licenseToolStripMenuItem");
+			this.licenseToolStripMenuItem.Name = "licenseToolStripMenuItem";
+			this.licenseToolStripMenuItem.Click += new System.EventHandler(this.licenseToolStripMenuItem_Click);
+			// 
+			// AwakeTimer
+			// 
+			this.AwakeTimer.Enabled = true;
+			this.AwakeTimer.Interval = 20000;
+			this.AwakeTimer.Tick += new System.EventHandler(this.AwakeTimer_Tick);
+			// 
+			// MultipleInstanceTimer
+			// 
+			this.MultipleInstanceTimer.Interval = 1000;
+			this.MultipleInstanceTimer.Tick += new System.EventHandler(this.MultipleInstanceTimer_Tick);
+			// 
+			// turkishToolStripMenuItem
+			// 
+			resources.ApplyResources(this.turkishToolStripMenuItem, "turkishToolStripMenuItem");
+			this.turkishToolStripMenuItem.Name = "turkishToolStripMenuItem";
+			this.turkishToolStripMenuItem.Click += new System.EventHandler(this.turkishToolStripMenuItem_Click);
 			// 
 			// MainForm
 			// 
+			this.AllowDrop = true;
 			resources.ApplyResources(this, "$this");
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.splitContainer1);
@@ -569,8 +879,11 @@
 			this.Name = "MainForm";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFormFormClosing);
 			this.Load += new System.EventHandler(this.MainForm_Load);
+			this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
+			this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
 			this.StatusBar.ResumeLayout(false);
 			this.StatusBar.PerformLayout();
@@ -589,11 +902,10 @@
 		private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem MnFileOpen;
 		private System.Windows.Forms.ToolStripMenuItem MnFileSend;
-		private System.Windows.Forms.ToolStripMenuItem grblToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem MnGrbl;
 		private System.Windows.Forms.ToolStripMenuItem MnGrblReset;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.Timer UpdateTimer;
-		private System.Windows.Forms.ToolStripStatusLabel spring1;
 		private System.Windows.Forms.ToolStripStatusLabel TTLStatus;
 		private System.Windows.Forms.ToolStripStatusLabel TTOvG0;
 		private System.Windows.Forms.ToolStripStatusLabel TTOvG1;
@@ -615,9 +927,8 @@
 		private System.Windows.Forms.ToolStripMenuItem MNEnglish;
 		private System.Windows.Forms.ToolStripMenuItem MNItalian;
 		private System.Windows.Forms.ToolStripMenuItem MNSpanish;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+		private System.Windows.Forms.ToolStripMenuItem questionMarkToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem helpOnLineToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem autoUpdateToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
 		private System.Windows.Forms.SplitContainer splitContainer1;
@@ -641,13 +952,54 @@
 		private System.Windows.Forms.ToolStripMenuItem redLaserToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem darkToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem hackerToolStripMenuItem;
-		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+		private System.Windows.Forms.ToolStripStatusLabel TTLBuffer;
 		private System.Windows.Forms.ToolStripProgressBar PbBuffer;
 		private System.Windows.Forms.ToolStripMenuItem MnGrblConfig;
 		private System.Windows.Forms.ToolStripMenuItem donateToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem MnReOpenFile;
 		private System.Windows.Forms.ToolStripMenuItem MnHotkeys;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+		private System.Windows.Forms.Timer AwakeTimer;
+		private System.Windows.Forms.ToolStripMenuItem MnStartFromPosition;
+		private System.Windows.Forms.ToolStripMenuItem MnFileAppend;
+		private System.Windows.Forms.ToolStripMenuItem slovakianToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem hungarianToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem czechToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem flashGrblFirmwareToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+		private System.Windows.Forms.ToolStripMenuItem configurationWizardToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem installCH340DriverToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem activateExtendedLogToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem nightyToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem MnAdvancedSave;
+		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
+		private System.Windows.Forms.ToolStripMenuItem licenseToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem MnAutoUpdate;
+		private System.Windows.Forms.ToolStripMenuItem MnNotifyMinorVersion;
+		private System.Windows.Forms.ToolStripMenuItem MnNotifyNewVersion;
+		private System.Windows.Forms.ToolStripMenuItem MnNotifyPreRelease;
+		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
+		private System.Windows.Forms.ToolStripMenuItem MnCheckNow;
+		private System.Windows.Forms.ToolStripMenuItem MnMaterialDB;
+		private System.Windows.Forms.ToolStripMenuItem polishToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem MnOrtur;
+		private System.Windows.Forms.ToolStripMenuItem orturSupportGroupToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem orturWebsiteToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem facebookCommunityToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem traditionalChineseToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem youtubeChannelToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+		private System.Windows.Forms.ToolStripMenuItem manualsDownloadToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem firmwareToolStripMenuItem;
+		private System.Windows.Forms.Timer MultipleInstanceTimer;
+		private System.Windows.Forms.ToolStripMenuItem MnRunMulti;
+		private System.Windows.Forms.ToolStripSeparator MnRunMultiSep;
+		private System.Windows.Forms.ToolStripMenuItem orturSupportAndFeedbackToolStripMenuItem;
+		private System.Windows.Forms.ToolStripStatusLabel TTLinkToNews;
+		private System.Windows.Forms.ToolStripMenuItem MnWiFiDiscovery;
+        private System.Windows.Forms.ToolStripMenuItem greekToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem turkishToolStripMenuItem;
 	}
 }
 

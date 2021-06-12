@@ -1,7 +1,14 @@
-﻿using System;
+﻿//Copyright (c) 2016-2021 Diego Settimi - https://github.com/arkypita/
+
+// This program is free software; you can redistribute it and/or modify  it under the terms of the GPLv3 General Public License as published by  the Free Software Foundation; either version 3 of the License, or (at  your option) any later version.
+// This program is distributed in the hope that it will be useful, but  WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GPLv3  General Public License for more details.
+// You should have received a copy of the GPLv3 General Public License  along with this program; if not, write to the Free Software  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,  USA. using System;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 namespace LaserGRBL
 {
@@ -16,7 +23,7 @@ namespace LaserGRBL
 	{
 		public class StatePositionBuilder : StateBuilder
 		{
-			bool supportPWM = (bool)Settings.GetObject("Support Hardware PWM", true);
+			bool supportPWM = Settings.GetObject("Support Hardware PWM", true);
 
 			public class CumulativeElement : Element
 			{
@@ -83,11 +90,7 @@ namespace LaserGRBL
 			private LastValueElement mCurF = new LastValueElement("F0");
 			private LastValueElement mCurS = new LastValueElement("S0");
 
-			public class AnalyzeCommandRV
-			{
-				public decimal Distance;
-				public TimeSpan Delay;
-			}
+			public G2G3Helper LastArcHelperResult;
 
 			public TimeSpan AnalyzeCommand(GrblCommand cmd, bool compute, GrblConf conf = null)
 			{
@@ -169,7 +172,7 @@ namespace LaserGRBL
 			{ get { return mCurZ; } }
 
 			internal bool TrueMovement()
-			{ return (mCurX.Number != mCurX.Previous || mCurY.Number != mCurY.Previous); }
+			{ return (mCurX.Number != mCurX.Previous || mCurY.Number != mCurY.Previous || G2G3); }
 
 
 			private TimeSpan ComputeExecutionTime(GrblCommand cmd, GrblConf conf)
@@ -177,7 +180,7 @@ namespace LaserGRBL
 				decimal f = cmd is JogCommand && cmd.F != null ? cmd.F.Number : mCurF.Number;
 
 				if (G0 && cmd.IsLinearMovement)
-					return TimeSpan.FromMinutes((double)GetSegmentLenght(cmd) / (double)conf.MaxRateX); //todo: use a better computation of xy if different speed
+					return TimeSpan.FromMinutes((double)GetSegmentLenght(cmd) / (double)conf.MaxRateX); //todo: use a better computation of xy if different x/y max speed
 				else if (G1G2G3 && cmd.IsMovement && f != 0)
 					return TimeSpan.FromMinutes((double)GetSegmentLenght(cmd) / (double)Math.Min(f, conf.MaxRateX));
 				else if (cmd.IsPause)
@@ -188,10 +191,12 @@ namespace LaserGRBL
 
 			private decimal GetSegmentLenght(GrblCommand cmd)
 			{
+				LastArcHelperResult = null;
+
 				if (cmd.IsLinearMovement)
 					return Tools.MathHelper.LinearDistance(mCurX.Previous, mCurY.Previous, mCurX.Number, mCurY.Number);
 				else if (cmd.IsArcMovement) //arc of given radius
-					return Tools.MathHelper.ArcDistance(mCurX.Previous, mCurY.Previous, mCurX.Number, mCurY.Number, cmd.GetArcRadius());
+					return (decimal)GetArcHelper(cmd).AbsLenght;
 				else
 					return 0;
 			}
@@ -235,6 +240,12 @@ namespace LaserGRBL
 				mCurX = new CumulativeElement("X0");
 				mCurY = new CumulativeElement("Y0");
 				mCurZ = new CumulativeElement("Z0");
+			}
+
+			internal G2G3Helper GetArcHelper(GrblCommand cmd)
+			{
+				LastArcHelperResult = new G2G3Helper(this, cmd);
+				return LastArcHelperResult;
 			}
 		}
 
@@ -357,5 +368,167 @@ namespace LaserGRBL
 
 		public bool IsSetWCO
 		{ get { return G != null && G.Number == 92; } }
+
+
+
+		public class G2G3Helper
+		{
+			public double CenterX;
+			public double CenterY;
+			public double Lenght => AngularWidth * Ray;
+			public double AbsLenght => Math.Abs(Lenght);
+			public bool CW;
+
+			public double Ray;
+
+			public double RectX;
+			public double RectY;
+			public double RectW;
+			public double RectH;
+
+			public Rect BBox;
+
+			public double StartAngle;
+			public double EndAngle;
+			public double AngularWidth;
+
+			public G2G3Helper(LaserGRBL.GrblCommand.StatePositionBuilder spb, LaserGRBL.GrblCommand cmd)
+			{
+				bool jb = cmd.JustBuilt;
+				if (!jb) cmd.BuildHelper();
+
+				CW = spb.G2;
+
+				double aX = (double)spb.X.Previous; //startX
+				double aY = (double)spb.Y.Previous; //startY
+				double bX = (double)spb.X.Number;	//endX
+				double bY = (double)spb.Y.Number;   //endY
+				double oX = cmd.I != null ? (double)cmd.I.Number : 0.0; //offsetX
+				double oY = cmd.J != null ? (double)cmd.J.Number : 0.0; //offsetY
+
+				CenterX = aX + oX; //centerX
+				CenterY = aY + oY; //centerY
+
+				Ray = Math.Sqrt(oX * oX + oY * oY);  //raggio
+
+				RectX = CenterX - Ray;
+				RectY = CenterY - Ray;
+				RectW = 2 * Ray;
+				RectH = 2 * Ray;
+
+				StartAngle = CalculateAngle(CenterX, CenterY, aX, aY); //angolo iniziale
+				EndAngle = CalculateAngle(CenterX, CenterY, bX, bY); //angolo finale
+				AngularWidth = AngularDistance(StartAngle, EndAngle, spb.G2);
+
+				if (Circle(aX, aY, bX, bY))
+					BBox = new Rect(RectX, RectY, RectW, RectH);
+				else
+					BBox = CW ? BBBox(EndAngle, StartAngle, Ray, CenterX, CenterY) : BBBox(StartAngle, EndAngle, Ray, CenterX, CenterY);
+
+				if (!jb) cmd.DeleteHelper();
+			}
+
+			private bool Circle(double aX, double aY, double bX, double bY)
+			{
+				return aX == bX && aY == bY;
+			}
+
+			private static double CalculateAngle(double x1, double y1, double x2, double y2)
+			{
+				// returns Angle of line between 2 points and X axis (according to quadrants)
+				double Angle = 0;
+
+				if (x1 == x2 && y1 == y2) // same points
+					return 0;
+				else if (x1 == x2) // 90 or 270
+				{
+					Angle = Math.PI / 2;
+					if (y1 > y2) Angle += Math.PI;
+				}
+				else if (y1 == y2) // 0 or 180
+				{
+					Angle = 0;
+					if (x1 > x2) Angle += Math.PI;
+				}
+				else
+				{
+					Angle = Math.Atan(Math.Abs((y2 - y1) / (x2 - x1))); // 1. quadrant
+					if (x1 > x2 && y1 < y2) // 2. quadrant
+						Angle = Math.PI - Angle;
+					else if (x1 > x2 && y1 > y2) // 3. quadrant
+						Angle += Math.PI;
+					else if (x1 < x2 && y1 > y2) // 4. quadrant
+						Angle = 2 * Math.PI - Angle;
+				}
+				return Angle;
+			}
+
+			private static double AngularDistance(double aA, double bA, bool cw)
+			{
+				if (cw)
+					return bA >= aA ? (bA - 2 * Math.PI - aA) : bA - aA;
+				else
+					return -(aA >= bA ? (aA - 2 * Math.PI - bA) : aA - bA);
+			}
+
+
+			private const double a0 = 0.0;
+			private const double a90 = Math.PI / 2.0;
+			private const double a180 = Math.PI;
+			private const double a270 = Math.PI * 3.0 / 2.0;
+			private const double a360 = Math.PI * 2;
+
+			public static int GetQuadrant(Double angle)
+			{
+				var trueAngle = angle % (2 * Math.PI);
+
+				if (trueAngle >= a0 && trueAngle < a90)
+					return 1;
+				else if (trueAngle >= a90 && trueAngle < a180)
+					return 2;
+				else if (trueAngle >= a180 && trueAngle < a270)
+					return 3;
+				else //if (trueAngle >= a270 && trueAngle < a360)
+					return 4;
+			}
+
+			//Oleg Petrochenko alghorithm
+			//From https://stackoverflow.com/questions/32365479/formula-to-calculate-bounding-coordinates-of-an-arc-in-space
+			public static Rect BBBox(Double startAngle, Double endAngle, Double r, Double centerX, Double centerY)
+			{
+				int startQuad = GetQuadrant(startAngle) - 1;
+				int endQuad = GetQuadrant(endAngle) - 1;
+
+				// Convert to Cartesian coordinates.
+				Point stPt = new Point(Math.Round(r * Math.Cos(startAngle), 14), Math.Round(r * Math.Sin(startAngle), 14));
+				Point enPt = new Point(Math.Round(r * Math.Cos(endAngle), 14), Math.Round(r * Math.Sin(endAngle), 14));
+
+				// Find bounding box excluding extremum.
+				double minX = stPt.X;
+				double minY = stPt.Y;
+				double maxX = stPt.X;
+				double maxY = stPt.Y;
+
+				if (maxX < enPt.X) maxX = enPt.X;
+				if (maxY < enPt.Y) maxY = enPt.Y;
+				if (minX > enPt.X) minX = enPt.X;
+				if (minY > enPt.Y) minY = enPt.Y;
+
+				// Build extremum matrices.
+				var xMax = new[,] { { maxX, r, r, r }, { maxX, maxX, r, r }, { maxX, maxX, maxX, r }, { maxX, maxX, maxX, maxX } };
+				var yMax = new[,] { { maxY, maxY, maxY, maxY }, { r, maxY, r, r }, { r, maxY, maxY, r }, { r, maxY, maxY, maxY } };
+				var xMin = new[,] { { minX, -r, minX, minX }, { minX, minX, minX, minX }, { -r, -r, minX, -r }, { -r, -r, minX, minX } };
+				var yMin = new[,] { { minY, -r, -r, minY }, { minY, minY, -r, minY }, { minY, minY, minY, minY }, { -r, -r, -r, minY } };
+
+				// Select desired values
+				var startPt = new Point(xMin[endQuad, startQuad], yMin[endQuad, startQuad]);
+				var endPt = new Point(xMax[endQuad, startQuad], yMax[endQuad, startQuad]);
+				
+				Rect rv = new Rect(startPt, endPt);
+				rv.Offset(centerX, centerY);	//i conti sono fatti su un arco con centro in 0,0 quindi aggiungiamo il vero offset alla fine
+
+				return rv;
+			}
+		}
 	}
 }

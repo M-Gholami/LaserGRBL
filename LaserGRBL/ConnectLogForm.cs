@@ -1,11 +1,9 @@
-﻿/*
- * Created by SharpDevelop.
- * User: Diego
- * Date: 05/12/2016
- * Time: 23:41
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
+﻿//Copyright (c) 2016-2021 Diego Settimi - https://github.com/arkypita/
+
+// This program is free software; you can redistribute it and/or modify  it under the terms of the GPLv3 General Public License as published by  the Free Software Foundation; either version 3 of the License, or (at  your option) any later version.
+// This program is distributed in the hope that it will be useful, but  WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GPLv3  General Public License for more details.
+// You should have received a copy of the GPLv3 General Public License  along with this program; if not, write to the Free Software  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,  USA. using System;
+
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -17,7 +15,7 @@ namespace LaserGRBL
 	/// </summary>
 	public partial class ConnectLogForm : System.Windows.Forms.UserControl
 	{
-		private object[] baudRates = { 4800, 9600, 19200, 38400, 57600, 115200, 230400 };
+		private object[] baudRates = { 4800, 9600, 19200, 38400, 57600, 115200, 230400, 460800, 921600 };
 		public ComWrapper.WrapperType currentWrapper;
 
 		GrblCore Core;
@@ -25,7 +23,7 @@ namespace LaserGRBL
 
 		public ConnectLogForm()
 		{
-			currentWrapper = (ComWrapper.WrapperType)Settings.GetObject("ComWrapper Protocol", ComWrapper.WrapperType.UsbSerial);
+			currentWrapper = Settings.GetObject("ComWrapper Protocol", ComWrapper.WrapperType.UsbSerial);
 			InitializeComponent();
 		}
 
@@ -66,9 +64,9 @@ namespace LaserGRBL
 			CBSpeed.SelectedItem = Settings.GetObject("Serial Speed", 115200);
 
 			if (currentWrapper == ComWrapper.WrapperType.Telnet)
-				TxtAddress.Text = (string)Settings.GetObject("Telnet Address", "127.0.0.1:23");	
+				TxtAddress.Text = Settings.GetObject("Telnet Address", "127.0.0.1:23");	
 			else if (currentWrapper == ComWrapper.WrapperType.LaserWebESP8266)
-				TxtAddress.Text = (string)Settings.GetObject("Websocket URL", "ws://127.0.0.1:81/"); 
+				TxtAddress.Text = Settings.GetObject("Websocket URL", "ws://127.0.0.1:81/"); 
 		}
 
 		void OnFileLoaded(long elapsed, string filename)
@@ -115,17 +113,85 @@ namespace LaserGRBL
 				CBPort.SelectedIndex = CBPort.Items.Count -1;
 			CBPort.EndUpdate();
 		}
-		
+
+		//private static System.Text.RegularExpressions.Regex ComRX = new System.Text.RegularExpressions.Regex(@"(?'wholecom'(?:^|[ (])COM(?'comno'\d+)(?:[) ]|$))", System.Text.RegularExpressions.RegexOptions.Compiled);
+		//private System.Collections.Generic.SortedDictionary<int, string> GetPortDictionary()
+		//{
+		//	System.Collections.Generic.SortedDictionary<int, string> rv = new System.Collections.Generic.SortedDictionary<int, string>();
+		//
+		//	try //add using managment object
+		//	{
+		//		using (System.Management.ManagementObjectSearcher searcher = new System.Management.ManagementObjectSearcher(@"\\.\root\cimv2", "SELECT * FROM Win32_PnPEntity"))
+		//		{
+		//			System.Management.ManagementObjectCollection moc = searcher.Get();
+		//			foreach (System.Management.ManagementObject mo in moc)
+		//			{
+		//				string caption = (string)mo["Caption"];
+		//				if (caption != null && ComRX.IsMatch(caption))
+		//				{
+		//					System.Text.RegularExpressions.Match m = ComRX.Match(caption);
+		//					if (m != null && m.Groups["comno"] != null)
+		//					{
+		//						int no = int.Parse(m.Groups["comno"].Value);
+		//						string wholecom = m.Groups["wholecom"].Value;
+		//						if (!rv.ContainsKey(no))
+		//							rv.Add(int.Parse(m.Groups["comno"].Value), caption.Replace(wholecom, "").Trim());
+		//					}
+		//				}
+		//			}
+		//
+		//		}
+		//	}
+		//	catch { }
+		//
+		//	try //add using SerialPort.GetPortNames 
+		//	{
+		//		foreach (string dirty in System.IO.Ports.SerialPort.GetPortNames())
+		//		{
+		//			string comno = dirty;
+		//			if (!char.IsDigit(comno[comno.Length - 1]))
+		//				comno = comno.Substring(0, comno.Length - 1);
+		//
+		//			string caption = comno;
+		//			if (caption != null && ComRX.IsMatch(caption))
+		//			{
+		//				System.Text.RegularExpressions.Match m = ComRX.Match(caption);
+		//				if (m != null && m.Groups["comno"] != null)
+		//				{
+		//					int no = int.Parse(m.Groups["comno"].Value);
+		//					if (!rv.ContainsKey(no))
+		//						rv.Add(int.Parse(m.Groups["comno"].Value), "Generic COM Port");
+		//				}
+		//			}
+		//		}
+		//	}
+		//	catch { }
+		//
+		//	return rv;
+		//}
+
+
 		void BtnConnectDisconnectClick(object sender, EventArgs e)
 		{
 			if (Core.MachineStatus == GrblCore.MacStatus.Disconnected)
 				Core.OpenCom();
-			else if (!(Core.InProgram && System.Windows.Forms.MessageBox.Show(Strings.DisconnectAnyway, "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != System.Windows.Forms.DialogResult.Yes))
+			else if (!(Core.InProgram && System.Windows.Forms.MessageBox.Show(Strings.DisconnectAnyway, Strings.WarnMessageBoxHeader, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) != System.Windows.Forms.DialogResult.Yes))
 				Core.CloseCom(true);
 
 			TimerUpdate();
 		}
-		
+
+
+		void ApplyConfig()
+		{
+			if ((currentWrapper == ComWrapper.WrapperType.UsbSerial || currentWrapper == ComWrapper.WrapperType.UsbSerial2) && CBPort.Text != null && CBSpeed.SelectedItem != null)
+				Core.Configure(currentWrapper, CBPort.Text, (int)CBSpeed.SelectedItem);
+			else if (currentWrapper == ComWrapper.WrapperType.Telnet || currentWrapper == ComWrapper.WrapperType.LaserWebESP8266)
+				Core.Configure(currentWrapper, (string)TxtAddress.Text);
+			else if (currentWrapper == ComWrapper.WrapperType.Emulator)
+				Core.Configure(currentWrapper);
+		}
+
 		void BtnOpenClick(object sender, EventArgs e)
 		{
 			Core.OpenFile(ParentForm);
@@ -133,18 +199,18 @@ namespace LaserGRBL
 
 		void BtnRunProgramClick(object sender, EventArgs e)
 		{
-			Core.RunProgram();
+			Core.RunProgram(ParentForm);
 		}
 		void TxtManualCommandCommandEntered(string command)
 		{
-			Core.EnqueueCommand(new GrblCommand(command));
+			Core.EnqueueCommand(new GrblCommand(command, 0, true));
 		}
 		
 		public void TimerUpdate()
 		{
 			SuspendLayout();
 
-			if (!Core.IsOpen && System.IO.Ports.SerialPort.GetPortNames().Length != CBPort.Items.Count)
+			if (!Core.IsConnected && System.IO.Ports.SerialPort.GetPortNames().Length != CBPort.Items.Count)
 				InitPortCB();
 			
 			PB.Maximum = Core.ProgramTarget;
@@ -161,9 +227,9 @@ namespace LaserGRBL
 				PB.PercString = "";
 			
 			PB.Invalidate();
-			
-			
-			
+
+
+
 			/*
 			Idle: All systems are go, no motions queued, and it's ready for anything.
 			Run: Indicates a cycle is running.
@@ -174,11 +240,13 @@ namespace LaserGRBL
 			Check: Grbl is in check G-code mode. It will process and respond to all G-code commands, but not motion or turn on anything. Once toggled off with another '$C' command, Grbl will reset itself.
 			*/
 
-			TT.SetToolTip(BtnConnectDisconnect, Core.IsOpen ? "Disconnect" : "Connect");
+			TT.SetToolTip(BtnConnectDisconnect, Core.IsConnected ? Strings.BtnDisconnectTT : Strings.BtnConnectTT);
 			
-			BtnConnectDisconnect.UseAltImage = Core.IsOpen;
+			BtnConnectDisconnect.UseAltImage = Core.IsConnected;
 			BtnRunProgram.Enabled = Core.CanSendFile;
-			BtnOpen.Enabled = Core.CanLoadNewFile;
+            BtnRunProgram.Visible = !Core.CanAbortProgram;
+            BtnAbortProgram.Visible = Core.CanAbortProgram;
+            BtnOpen.Enabled = Core.CanLoadNewFile;
 
 			bool old = TxtManualCommand.Enabled;
 			TxtManualCommand.Enabled = Core.CanSendManualCommand;
@@ -186,15 +254,15 @@ namespace LaserGRBL
 			//	TxtManualCommand.Focus();
 
 			//CBProtocol.Enabled = !Core.IsOpen;
-			CBPort.Enabled = !Core.IsOpen;
-			CBSpeed.Enabled = !Core.IsOpen;
-			TxtAddress.Enabled = !Core.IsOpen;
+			CBPort.Enabled = !Core.IsConnected;
+			CBSpeed.Enabled = !Core.IsConnected;
+			TxtAddress.Enabled = !Core.IsConnected;
 
 			CmdLog.TimerUpdate();
 
-			if (!Core.IsOpen)
+			if (!Core.IsConnected)
 			{
-				ComWrapper.WrapperType actualWrapper = (ComWrapper.WrapperType)Settings.GetObject("ComWrapper Protocol", ComWrapper.WrapperType.UsbSerial);
+				ComWrapper.WrapperType actualWrapper = Settings.GetObject("ComWrapper Protocol", ComWrapper.WrapperType.UsbSerial);
 				if (actualWrapper != currentWrapper)
 				{
 					currentWrapper = actualWrapper;
@@ -210,6 +278,11 @@ namespace LaserGRBL
 			UpdateConf();
 		}
 
+		private void CBPort_TextChanged(object sender, EventArgs e)
+		{
+			UpdateConf();
+		}
+
 		private void CBSpeed_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			UpdateConf();
@@ -219,18 +292,11 @@ namespace LaserGRBL
 		private void UpdateConf()
 		{
 			tableLayoutPanel4.SuspendLayout();
-			CBPort.Visible = CBSpeed.Visible = LblComPort.Visible = LblBaudRate.Visible = (currentWrapper == ComWrapper.WrapperType.UsbSerial);
+			CBPort.Visible = CBSpeed.Visible = LblComPort.Visible = LblBaudRate.Visible = (currentWrapper == ComWrapper.WrapperType.UsbSerial || currentWrapper == ComWrapper.WrapperType.UsbSerial2);
 			TxtAddress.Visible = LblAddress.Visible = (currentWrapper == ComWrapper.WrapperType.Telnet || currentWrapper == ComWrapper.WrapperType.LaserWebESP8266);
 			LblAddress.Text = (currentWrapper == ComWrapper.WrapperType.Telnet ? "IP:PORT" : "Socket URL");
 			TxtEmulator.Visible = LblEmulator.Visible = (currentWrapper == ComWrapper.WrapperType.Emulator);
 			tableLayoutPanel4.ResumeLayout();
-
-			if (currentWrapper == ComWrapper.WrapperType.UsbSerial && CBPort.SelectedItem != null && CBSpeed.SelectedItem != null)
-				Core.Configure(currentWrapper, (string)CBPort.SelectedItem, (int)CBSpeed.SelectedItem);
-			else if (currentWrapper == ComWrapper.WrapperType.Telnet || currentWrapper == ComWrapper.WrapperType.LaserWebESP8266)
-				Core.Configure(currentWrapper, (string)TxtAddress.Text);
-			else if (currentWrapper == ComWrapper.WrapperType.Emulator)
-				Core.Configure(currentWrapper);
 
 			if (CBSpeed.SelectedItem != null)
 				Settings.SetObject("Serial Speed", CBSpeed.SelectedItem);
@@ -242,6 +308,8 @@ namespace LaserGRBL
 				else if (currentWrapper == ComWrapper.WrapperType.LaserWebESP8266)
 					Settings.SetObject("Websocket URL", TxtAddress.Text);
 			}
+
+			ApplyConfig();
 
 			Settings.Save();
 		}
@@ -290,6 +358,24 @@ namespace LaserGRBL
 		private void TbFileName_MouseLeave(object sender, EventArgs e)
 		{
 			TT.Hide(TbFileName);
+		}
+
+        private void BtnAbortProgram_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show(Strings.BoxAbortProgramConfirm, Strings.WarnMessageBoxHeader, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == System.Windows.Forms.DialogResult.Yes)
+                Core.AbortProgram();
+        }
+
+		internal void ConfigFromDiscovery(string config)
+		{
+			if (TxtAddress.Visible && TxtAddress.Enabled && config != null)
+			{
+				TxtAddress.Text = config;
+				Application.DoEvents();
+
+				if (BtnConnectDisconnect.Enabled && Core.MachineStatus == GrblCore.MacStatus.Disconnected)
+					BtnConnectDisconnectClick(null, null);
+			}
 		}
 	}
 }

@@ -1,4 +1,10 @@
-﻿using System;
+﻿//Copyright (c) 2016-2021 Diego Settimi - https://github.com/arkypita/
+
+// This program is free software; you can redistribute it and/or modify  it under the terms of the GPLv3 General Public License as published by  the Free Software Foundation; either version 3 of the License, or (at  your option) any later version.
+// This program is distributed in the hope that it will be useful, but  WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GPLv3  General Public License for more details.
+// You should have received a copy of the GPLv3 General Public License  along with this program; if not, write to the Free Software  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,  USA. using System;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,11 +17,16 @@ namespace LaserGRBL
 {
 	public partial class ResumeJobForm : Form
 	{
-		internal static int CreateAndShowDialog(int exec, int sent, int target, GrblCore.DetectedIssue issue, bool allowHoming, bool suggestHoming, out bool homing, bool allowWCO, bool suggestWCO, out bool wco, System.Drawing.PointF wcopos)
+
+
+		bool mAllowH, mSuggestH;
+		int mExec, mSent, mSomeLine;
+
+		internal static int CreateAndShowDialog(Form parent, int exec, int sent, int target, GrblCore.DetectedIssue issue, bool allowHoming, bool suggestHoming, out bool homing, bool allowWCO, bool suggestWCO, out bool wco, GPoint wcopos)
 		{
 			ResumeJobForm f = new ResumeJobForm(exec, sent, target, issue, allowHoming, suggestHoming, allowWCO, suggestWCO, wcopos);
 
-			int rv = f.ShowDialog() == DialogResult.OK ? f.Position : -1;
+			int rv = f.ShowDialog(parent) == DialogResult.OK ? f.Position : -1;
 			homing = f.DoHoming;
 			wco = f.RestoreWCO;
 			f.Dispose();
@@ -23,16 +34,14 @@ namespace LaserGRBL
 			return rv;
 		}
 
-		bool mAllowH, mSuggestH;
-		int mExec, mSent, mSomeLine;
-		private ResumeJobForm(int exec, int sent, int target, GrblCore.DetectedIssue issue, bool allowHoming, bool suggestHoming, bool allowWCO, bool suggestWCO, System.Drawing.PointF wcopos)
+		private ResumeJobForm(int exec, int sent, int target, GrblCore.DetectedIssue issue, bool allowHoming, bool suggestHoming, bool allowWCO, bool suggestWCO, GPoint wcopos)
 		{
 			InitializeComponent();
 			mAllowH = allowHoming;
 			mSuggestH = suggestHoming;
-			mSomeLine = Math.Max(0, exec - 17) +1;
-			mExec = exec +1;
-			mSent = sent +1;
+			mSomeLine = Math.Max(0, exec - 17) + 1;
+			mExec = exec + 1;
+			mSent = sent + 1;
 			LblSomeLines.Text = mSomeLine.ToString();
 			LblSent.Text = mSent.ToString();
 			UdSpecific.Maximum = mSent;
@@ -42,32 +51,38 @@ namespace LaserGRBL
 
 			TxtCause.Text = issue.ToString();
 
-			if (/*issue == GrblCore.DetectedIssue.StopMoving ||*/ issue == GrblCore.DetectedIssue.StopResponding || issue == GrblCore.DetectedIssue.UnexpectedReset || issue == GrblCore.DetectedIssue.ManualReset)
-			{
-				//all this causes indicate a situation where grbl does not execute the content of buffers (both planned and rx)
-				//so restart from some line (17 lines) before the last command in planned buffer
+            if (/*issue == GrblCore.DetectedIssue.StopMoving ||*/ issue == GrblCore.DetectedIssue.StopResponding || issue == GrblCore.DetectedIssue.UnexpectedReset || issue == GrblCore.DetectedIssue.ManualReset)
+            {
+                //all this causes indicate a situation where grbl does not execute the content of buffers (both planned and rx)
+                //so restart from some line (17 lines) before the last command in planned buffer
 
-				if (RbSomeLines.Enabled)
-					RbSomeLines.Checked = true;
-				else
-					RbFromBeginning.Checked = true;
-			}
-			else if (issue == GrblCore.DetectedIssue.ManualDisconnect || issue == GrblCore.DetectedIssue.UnexpectedDisconnect)
-			{
-				//if issue is a disconnect all sent lines could be already executed
-				//so restart from sent
-				if (RbFromSent.Enabled)
-					RbFromSent.Checked = true;
-				else
-					RbFromSpecific.Checked = true;
-			}
+                if (RbSomeLines.Enabled)
+                    RbSomeLines.Checked = true;
+                else
+                    RbFromBeginning.Checked = true;
+            }
+            else if (issue == GrblCore.DetectedIssue.ManualDisconnect || issue == GrblCore.DetectedIssue.UnexpectedDisconnect)
+            {
+                //if issue is a disconnect all sent lines could be already executed
+                //so restart from sent
+                if (RbFromSent.Enabled)
+                    RbFromSent.Checked = true;
+                else
+                    RbFromSpecific.Checked = true;
+            }
+            else if (issue == GrblCore.DetectedIssue.ManualAbort)
+            {
+                RbFromBeginning.Checked = true;
+            }
 
 			CbRedoHoming.Visible = allowHoming;
 			CbRedoHoming.Checked = allowHoming && suggestHoming;
 			CbRestoreWCO.Visible = allowWCO;
 			CbRestoreWCO.Checked = allowWCO && suggestWCO;
 			CbRestoreWCO.Text = String.Format("{0} X{1} Y{2}", CbRestoreWCO.Text, wcopos.X, wcopos.Y);
-		}
+            if (wcopos.Z != 0)
+                CbRestoreWCO.Text += String.Format(" Z{0}", wcopos.Z);
+        }
 
 		public bool DoHoming
 		{ get { return CbRedoHoming.Checked; } }

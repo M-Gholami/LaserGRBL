@@ -117,34 +117,43 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="$this.Text" xml:space="preserve">
-    <value>Verbindung</value>
-  </data>
-  <data name="label3.Text" xml:space="preserve">
+  <data name="LblFilename.Text" xml:space="preserve">
     <value>Dateiname</value>
   </data>
-  <data name="$this.ToolTipText" xml:space="preserve">
-    <value>Verbindung</value>
-  </data>
-  <data name="label5.Text" xml:space="preserve">
+  <data name="LblProgress.Text" xml:space="preserve">
     <value>Fortschritt</value>
   </data>
   <data name="BtnRunProgram.ToolTip" xml:space="preserve">
-    <value>Programm läuft</value>
+    <value>Programm ausführen</value>
   </data>
   <data name="BtnConnectDisconnect.ToolTip" xml:space="preserve">
-    <value>verbunden</value>
+    <value>Verbinden</value>
   </data>
   <data name="BtnOpen.ToolTip" xml:space="preserve">
-    <value>Datei geöffnet</value>
+    <value>Datei öffnen</value>
   </data>
   <data name="UDLoopCounter.ToolTip" xml:space="preserve">
-    <value>Anzahl der Durchläufe</value>
+    <value>Führe mehrere Durchläufe durch</value>
   </data>
   <data name="LblComPort.Text" xml:space="preserve">
     <value>COM</value>
   </data>
   <data name="LblBaudRate.Text" xml:space="preserve">
     <value>Baud</value>
+  </data>
+  <data name="LblAddress.Text" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="TxtEmulator.Text" xml:space="preserve">
+    <value>Emulated Grbl v1.1#</value>
+  </data>
+  <data name="BtnAbortProgram.ToolTip" xml:space="preserve">
+    <value>Programm abbrechen</value>
+  </data>
+  <data name="LblEmulator.Text" xml:space="preserve">
+    <value>Emulator</value>
+  </data>
+  <data name="TxtManualCommand.WaterMark" xml:space="preserve">
+    <value>gcode hier eingeben</value>
   </data>
 </root>

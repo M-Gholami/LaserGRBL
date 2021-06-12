@@ -1,4 +1,10 @@
-﻿using System;
+﻿//Copyright (c) 2016-2021 Diego Settimi - https://github.com/arkypita/
+
+// This program is free software; you can redistribute it and/or modify  it under the terms of the GPLv3 General Public License as published by  the Free Software Foundation; either version 3 of the License, or (at  your option) any later version.
+// This program is distributed in the hope that it will be useful, but  WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GPLv3  General Public License for more details.
+// You should have received a copy of the GPLv3 General Public License  along with this program; if not, write to the Free Software  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,  USA. using System;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,21 +17,25 @@ namespace LaserGRBL
 {
 	public partial class NewVersionForm : Form
 	{
-		private string mUrl;
+		private string mDownloadUrl;
+		private string mPageUrl;
 		private bool mClosing;
-		public NewVersionForm(string url)
+		private NewVersionForm()
 		{
 			InitializeComponent();
-			mUrl = url;
 			mClosing = false;
 		}
 
-		internal static void CreateAndShowDialog(Version current, Version latest, string name, string url, Form parent)
+		internal static void CreateAndShowDialog(Version current, GitHub.OnlineVersion available, Form parent)
 		{
-			using (NewVersionForm f = new NewVersionForm(url))
+			using (NewVersionForm f = new NewVersionForm())
 			{
+				f.mDownloadUrl = available.DownloadUrl;
+				f.mPageUrl = available.HtmlUrl;
 				f.LblCurrentVersion.Text = current.ToString(3);
-				f.LblLatestVersion.Text = latest.ToString(3);
+				f.LblLatestVersion.Text = available.Version.ToString(3);
+				if (available.IsPreRelease)
+					f.LblLatestVersion.Text = f.LblLatestVersion.Text + " pre-release";
 
 				DialogResult rv = f.ShowDialog(parent);
 
@@ -40,7 +50,7 @@ namespace LaserGRBL
 		{
 			BtnUpdate.Enabled = false;
 			BtnCancel.Enabled = false;
-			GitHub.DownloadUpdateA(mUrl, dprog, dcomplete); //start download progress
+			GitHub.DownloadUpdateA(mDownloadUrl, dprog, dcomplete); //start download progress
 		}
 
 		private void dprog(object sender, System.Net.DownloadProgressChangedEventArgs e)
@@ -86,14 +96,7 @@ namespace LaserGRBL
 		}
 
 		private void BtnWebsite_Click(object sender, EventArgs e)
-		{
-			System.Diagnostics.Process.Start(@"https://github.com/arkypita/LaserGRBL/releases/latest");
-		}
-
-
-
-
-
+		{Tools.Utils.OpenLink(mPageUrl);}
 
 	}
 }

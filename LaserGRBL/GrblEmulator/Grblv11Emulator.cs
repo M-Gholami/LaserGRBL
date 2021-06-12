@@ -1,4 +1,10 @@
-﻿using System;
+﻿//Copyright (c) 2016-2021 Diego Settimi - https://github.com/arkypita/
+
+// This program is free software; you can redistribute it and/or modify  it under the terms of the GPLv3 General Public License as published by  the Free Software Foundation; either version 3 of the License, or (at  your option) any later version.
+// This program is distributed in the hope that it will be useful, but  WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GPLv3  General Public License for more details.
+// You should have received a copy of the GPLv3 General Public License  along with this program; if not, write to the Free Software  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,  USA. using System;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -94,7 +100,7 @@ namespace LaserGRBL.GrblEmulator
 
 		public void ManageMessage(byte[] data)
 		{
-			if (data.Length == 1)
+			if (data.Length == 1 && data[0] != '\n')
 			{
 				if (data[0] == 24)
 					GrblReset();
@@ -107,14 +113,14 @@ namespace LaserGRBL.GrblEmulator
 			}
 			else
 			{
-				string message = Encoding.UTF8.GetString(data); 
+				string message = Encoding.UTF8.GetString(data);
 
-				if (message == "version\n")
-					;
-				else if (message == "{fb:n}\n")
-					;
-				else
-					EnqueueRX(message);
+                if (message == "version\n")
+                { }
+                else if (message == "{fb:n}\n")
+                { }
+                else
+                    EnqueueRX(message);
 			}
 		}
 
@@ -124,30 +130,18 @@ namespace LaserGRBL.GrblEmulator
 			SendStatus();
 		}
 
-		static System.Text.RegularExpressions.Regex confRegEX = new System.Text.RegularExpressions.Regex(@"^[$](\d+) *= *(\d+\.?\d*)");
+		
 		private bool IsSetConf(string p)
-		{ return confRegEX.IsMatch(p); }
+		{ return GrblConf.IsSetConf(p); }
 
 		private void SetConfig(string p)
 		{
-			try
-			{
-				System.Threading.Thread.Sleep(10);
-				System.Text.RegularExpressions.MatchCollection matches = confRegEX.Matches(p);
-				int key = int.Parse(matches[0].Groups[1].Value);
+			System.Threading.Thread.Sleep(10);
 
-				if (conf.ContainsKey(key))
-				{
-					conf.SetValue(key, decimal.Parse(matches[0].Groups[2].Value, System.Globalization.CultureInfo.InvariantCulture));
-					EnqueueTX("ok");
-				}
-				else
-					EnqueueTX("error");
-			}
-			catch (Exception ex)
-			{
+			if (conf.SetValueIfKeyExist(p))
+				EnqueueTX("ok");
+			else
 				EnqueueTX("error");
-			}
 		}
 
 		private void SendConfig()
@@ -245,7 +239,7 @@ namespace LaserGRBL.GrblEmulator
 
 						EmuLog(line.Trim("\n".ToCharArray()));
 					}
-					catch (Exception ex)
+					catch (Exception)
 					{
 					}
 				}
@@ -280,7 +274,7 @@ namespace LaserGRBL.GrblEmulator
 						string line = txBuf.Dequeue();
 						mSendFunc(line);
 					}
-					catch (Exception ex)
+					catch (Exception)
 					{
 					}
 				}

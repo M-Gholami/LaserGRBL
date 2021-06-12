@@ -19,7 +19,7 @@ namespace LaserGRBL {
     // tramite uno strumento quale ResGen o Visual Studio.
     // Per aggiungere o rimuovere un membro, modificare il file con estensione ResX ed eseguire nuovamente ResGen
     // con l'opzione /str oppure ricompilare il progetto VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Strings {
@@ -57,6 +57,24 @@ namespace LaserGRBL {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Right click here to add custom buttons.
+        /// </summary>
+        internal static string AddCustomButtonsHint {
+            get {
+                return ResourceManager.GetString("AddCustomButtonsHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Abort current job?.
+        /// </summary>
+        internal static string BoxAbortProgramConfirm {
+            get {
+                return ResourceManager.GetString("BoxAbortProgramConfirm", resourceCulture);
             }
         }
         
@@ -122,6 +140,33 @@ namespace LaserGRBL {
         internal static string BoxConnectErrorTitle {
             get {
                 return ResourceManager.GetString("BoxConnectErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Please provide GCode commands.
+        /// </summary>
+        internal static string BoxCustomButtonPleaseGCodeText {
+            get {
+                return ResourceManager.GetString("BoxCustomButtonPleaseGCodeText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Please provide tooltip text.
+        /// </summary>
+        internal static string BoxCustomButtonPleaseToolTipText {
+            get {
+                return ResourceManager.GetString("BoxCustomButtonPleaseToolTipText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Missing field.
+        /// </summary>
+        internal static string BoxCustomButtonPleaseToolTipTitle {
+            get {
+                return ResourceManager.GetString("BoxCustomButtonPleaseToolTipTitle", resourceCulture);
             }
         }
         
@@ -216,6 +261,33 @@ namespace LaserGRBL {
         }
         
         /// <summary>
+        ///   Cerca una stringa localizzata simile a Import custom button.
+        /// </summary>
+        internal static string BoxImportCustomButtonCaption {
+            get {
+                return ResourceManager.GetString("BoxImportCustomButtonCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Remove actual buttons? Select yes to remove, no to keep..
+        /// </summary>
+        internal static string BoxImportCustomButtonClearText {
+            get {
+                return ResourceManager.GetString("BoxImportCustomButtonClearText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Confirmation.
+        /// </summary>
+        internal static string BoxImportCustomButtonrCaption {
+            get {
+                return ResourceManager.GetString("BoxImportCustomButtonrCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Cerca una stringa localizzata simile a Error reading config!.
         /// </summary>
         internal static string BoxReadConfigError {
@@ -270,6 +342,24 @@ namespace LaserGRBL {
         }
         
         /// <summary>
+        ///   Cerca una stringa localizzata simile a Connect.
+        /// </summary>
+        internal static string BtnConnectTT {
+            get {
+                return ResourceManager.GetString("BtnConnectTT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Disconnect.
+        /// </summary>
+        internal static string BtnDisconnectTT {
+            get {
+                return ResourceManager.GetString("BtnDisconnectTT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Cerca una stringa localizzata simile a Edit button.
         /// </summary>
         internal static string CustomButtonEdit {
@@ -288,7 +378,7 @@ namespace LaserGRBL {
         }
         
         /// <summary>
-        ///   Cerca una stringa localizzata simile a Diagonal.
+        ///   Cerca una stringa localizzata simile a Diagonal (old).
         /// </summary>
         internal static string DirectionDiagonal {
             get {
@@ -297,7 +387,7 @@ namespace LaserGRBL {
         }
         
         /// <summary>
-        ///   Cerca una stringa localizzata simile a Horizontal.
+        ///   Cerca una stringa localizzata simile a Horizontal (old).
         /// </summary>
         internal static string DirectionHorizontal {
             get {
@@ -306,7 +396,115 @@ namespace LaserGRBL {
         }
         
         /// <summary>
-        ///   Cerca una stringa localizzata simile a None.
+        ///   Cerca una stringa localizzata simile a Cross Fill.
+        /// </summary>
+        internal static string DirectionNewCross {
+            get {
+                return ResourceManager.GetString("DirectionNewCross", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Diagonal.
+        /// </summary>
+        internal static string DirectionNewDiagonal {
+            get {
+                return ResourceManager.GetString("DirectionNewDiagonal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Diagonal Cross Fill.
+        /// </summary>
+        internal static string DirectionNewDiagonalCross {
+            get {
+                return ResourceManager.GetString("DirectionNewDiagonalCross", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Diagonal Grid.
+        /// </summary>
+        internal static string DirectionNewDiagonalGrid {
+            get {
+                return ResourceManager.GetString("DirectionNewDiagonalGrid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Grid.
+        /// </summary>
+        internal static string DirectionNewGrid {
+            get {
+                return ResourceManager.GetString("DirectionNewGrid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Hilbert.
+        /// </summary>
+        internal static string DirectionNewHilbert {
+            get {
+                return ResourceManager.GetString("DirectionNewHilbert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Horizontal.
+        /// </summary>
+        internal static string DirectionNewHorizontal {
+            get {
+                return ResourceManager.GetString("DirectionNewHorizontal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Inset Filling.
+        /// </summary>
+        internal static string DirectionNewInsetFilling {
+            get {
+                return ResourceManager.GetString("DirectionNewInsetFilling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Diagonal Reversed.
+        /// </summary>
+        internal static string DirectionNewReverseDiagonal {
+            get {
+                return ResourceManager.GetString("DirectionNewReverseDiagonal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Squares.
+        /// </summary>
+        internal static string DirectionNewSquares {
+            get {
+                return ResourceManager.GetString("DirectionNewSquares", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Vertical.
+        /// </summary>
+        internal static string DirectionNewVertical {
+            get {
+                return ResourceManager.GetString("DirectionNewVertical", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Zig Zag.
+        /// </summary>
+        internal static string DirectionNewZigZag {
+            get {
+                return ResourceManager.GetString("DirectionNewZigZag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a No Filling.
         /// </summary>
         internal static string DirectionNone {
             get {
@@ -315,7 +513,7 @@ namespace LaserGRBL {
         }
         
         /// <summary>
-        ///   Cerca una stringa localizzata simile a Vertical.
+        ///   Cerca una stringa localizzata simile a Vertical (old).
         /// </summary>
         internal static string DirectionVertical {
             get {
@@ -333,11 +531,38 @@ namespace LaserGRBL {
         }
         
         /// <summary>
+        ///   Cerca una stringa localizzata simile a Dithering Options.
+        /// </summary>
+        internal static string DitheringOptions {
+            get {
+                return ResourceManager.GetString("DitheringOptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Cerca una stringa localizzata simile a File transfer in progress. Exit anyway?.
         /// </summary>
         internal static string ExitAnyway {
             get {
                 return ResourceManager.GetString("ExitAnyway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Restart required.
+        /// </summary>
+        internal static string FirmwareRequireRestart {
+            get {
+                return ResourceManager.GetString("FirmwareRequireRestart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Restart is required to apply Firmware type changes. Restart now?.
+        /// </summary>
+        internal static string FirmwareRequireRestartNow {
+            get {
+                return ResourceManager.GetString("FirmwareRequireRestartNow", resourceCulture);
             }
         }
         
@@ -410,6 +635,15 @@ namespace LaserGRBL {
         internal static string LanguageRequireRestartNow {
             get {
                 return ResourceManager.GetString("LanguageRequireRestartNow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Line To Line Options.
+        /// </summary>
+        internal static string Line2LineOptions {
+            get {
+                return ResourceManager.GetString("Line2LineOptions", resourceCulture);
             }
         }
         
@@ -531,6 +765,15 @@ namespace LaserGRBL {
         }
         
         /// <summary>
+        ///   Cerca una stringa localizzata simile a Cannot open a new file now..
+        /// </summary>
+        internal static string MsgboxCannotOpenFileNow {
+            get {
+                return ResourceManager.GetString("MsgboxCannotOpenFileNow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Cerca una stringa localizzata simile a It seems that the current position is no longer known by Grbl.
         ///Without the Homing Procedure ($H) the result may not be reliable.
         ///Continue anyway?.
@@ -547,6 +790,112 @@ namespace LaserGRBL {
         internal static string ResumeJobHomingRequiredTitle {
             get {
                 return ResourceManager.GetString("ResumeJobHomingRequiredTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Speed:.
+        /// </summary>
+        internal static string SpeedSliderToolTip {
+            get {
+                return ResourceManager.GetString("SpeedSliderToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Step:.
+        /// </summary>
+        internal static string StepSliderToolTip {
+            get {
+                return ResourceManager.GetString("StepSliderToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a This file type is not supported..
+        /// </summary>
+        internal static string UnsupportedFiletype {
+            get {
+                return ResourceManager.GetString("UnsupportedFiletype", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Centerline option is not compatible with your PC.
+        ///64bit OS is needed!.
+        /// </summary>
+        internal static string WarnCenterline64bit {
+            get {
+                return ResourceManager.GetString("WarnCenterline64bit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Line2Line option is not compatible with your engraver or with your configuration. PWM-able laser is needed, and PWM support should be enabled in LaserGRBL settings..
+        /// </summary>
+        internal static string WarnLine2LinePWM {
+            get {
+                return ResourceManager.GetString("WarnLine2LinePWM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Warning.
+        /// </summary>
+        internal static string WarnMessageBoxHeader {
+            get {
+                return ResourceManager.GetString("WarnMessageBoxHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a You have set negative offsets, but your engraver is set to use positive space with soft limit alarm enabled ($20=1).
+        ///
+        ///This could generate a soft-limit error. Are you sure of the entered values?.
+        /// </summary>
+        internal static string WarnSoftLimitNS {
+            get {
+                return ResourceManager.GetString("WarnSoftLimitNS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a You have set a size and offset that makes the job larger than the workspace configured in your engraver ({0}mm x {1}mm).
+        ///Grbl Parameters $130 and $131.
+        ///
+        ///This could generate a soft-limit error or the machine could crash into the axes boundary. Are you sure of the entered values?.
+        /// </summary>
+        internal static string WarnSoftLimitOOB {
+            get {
+                return ResourceManager.GetString("WarnSoftLimitOOB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Job boundary confirmation.
+        /// </summary>
+        internal static string WarnSoftLimitTitle {
+            get {
+                return ResourceManager.GetString("WarnSoftLimitTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a &quot;M4 Dynamic Laser Power Mode&quot; has been set, but your engraver doesn&apos;t seem to support it.
+        ///Only engravers with grbl version &gt;= 1.1 with &quot;laser mode&quot; enabled ($32=1) can take advantage of M4 option..
+        /// </summary>
+        internal static string WarnWrongLaserMode {
+            get {
+                return ResourceManager.GetString("WarnWrongLaserMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a Warning.
+        /// </summary>
+        internal static string WarnWrongLaserModeTitle {
+            get {
+                return ResourceManager.GetString("WarnWrongLaserModeTitle", resourceCulture);
             }
         }
     }

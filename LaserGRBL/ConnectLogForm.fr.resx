@@ -117,23 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="$this.Text" xml:space="preserve">
-    <value>Connection</value>
-  </data>
-  <data name="label3.Text" xml:space="preserve">
-    <value>Nom de Fichier</value>
-  </data>
   <data name="$this.ToolTipText" xml:space="preserve">
     <value>Connexion</value>
   </data>
-  <data name="label5.Text" xml:space="preserve">
-    <value>Progression</value>
-  </data>
   <data name="BtnRunProgram.ToolTip" xml:space="preserve">
-    <value>Demarrer le Programme</value>
+    <value>Démarrer le Programme</value>
   </data>
-  <data name="label1.Text" xml:space="preserve">
-    <value>Port COM</value>
+  <data name="LblFilename.Text" xml:space="preserve">
+    <value>Nom du Fichier</value>
   </data>
   <data name="BtnConnectDisconnect.ToolTip" xml:space="preserve">
     <value>Connecté</value>
@@ -141,10 +132,31 @@
   <data name="BtnOpen.ToolTip" xml:space="preserve">
     <value>Ouvrir le Fichier</value>
   </data>
-  <data name="label2.Text" xml:space="preserve">
-    <value>Vitesse en Baud</value>
+  <data name="LblProgress.Text" xml:space="preserve">
+    <value>Progression</value>
   </data>
   <data name="UDLoopCounter.ToolTip" xml:space="preserve">
     <value>Effectuer des passes multiples</value>
+  </data>
+  <data name="LblComPort.Text" xml:space="preserve">
+    <value>Port COM</value>
+  </data>
+  <data name="LblBaudRate.Text" xml:space="preserve">
+    <value>Vitesse en Baud</value>
+  </data>
+  <data name="LblAddress.Text" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="TxtEmulator.Text" xml:space="preserve">
+    <value>Emuler Grbl v1.1#</value>
+  </data>
+  <data name="TxtManualCommand.WaterMark" xml:space="preserve">
+    <value>Entrer le gcode ici</value>
+  </data>
+  <data name="LblEmulator.Text" xml:space="preserve">
+    <value>Emulateur</value>
+  </data>
+  <data name="BtnAbortProgram.ToolTip" xml:space="preserve">
+    <value>Annuler le programme</value>
   </data>
 </root>

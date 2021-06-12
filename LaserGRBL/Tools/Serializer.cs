@@ -1,4 +1,10 @@
-﻿using Microsoft.VisualBasic;
+﻿//Copyright (c) 2016-2021 Diego Settimi - https://github.com/arkypita/
+
+// This program is free software; you can redistribute it and/or modify  it under the terms of the GPLv3 General Public License as published by  the Free Software Foundation; either version 3 of the License, or (at  your option) any later version.
+// This program is distributed in the hope that it will be useful, but  WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GPLv3  General Public License for more details.
+// You should have received a copy of the GPLv3 General Public License  along with this program; if not, write to the Free Software  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,  USA. using System;
+
+using Microsoft.VisualBasic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,7 +19,7 @@ namespace Tools
 
 	public class Serializer
 	{
-		private static int counter = 0;
+		//private static int counter = 0;
 		private const string DataStartString = "<!-- OBJECT DATA BEGIN HERE-->\r\n";
 		private static string ThreadLock = "ThreadLock-String";
 
@@ -172,7 +178,7 @@ namespace Tools
 							{
 								if (AskForMissingPassword)
 								{
-									string NewKey = InputBox.Show("Insert password:", "Protected file", "", null).Text;
+									string NewKey = InputBox.Show(null, "Insert password:", "Protected file", "", null).Text;
 									if ((NewKey != null))
 									{
 										FinalStream.Close();
@@ -444,7 +450,7 @@ namespace Tools
 					Log.WriteEmptyLine();
 
 				}
-				catch (Exception e)
+				catch (Exception)
 				{
 					Log.WriteLogLines("Non è stato possibile creare una copia del file in oggetto");
 					Log.WriteEmptyLine();
@@ -455,7 +461,7 @@ namespace Tools
 					File.Move(FileName + ".bak", FileName);
 					Log.WriteLogLines(string.Format("Il file è stato rinominato in: {0} per permettere la rilettura", FileName));
 				}
-				catch (Exception ex)
+				catch (Exception)
 				{
 					Log.WriteLogLines(string.Format("Impossibile rinominare il file {0} in {0}", FileName + ".bak", FileName));
 				}
@@ -557,7 +563,7 @@ namespace Tools
 						Log.WriteEmptyLine();
 
 					}
-					catch (Exception e)
+					catch (Exception)
 					{
 						Log.WriteLogLines("Non è stato possibile creare una copia del file in oggetto");
 						Log.WriteEmptyLine();

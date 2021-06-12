@@ -1,7 +1,7 @@
-# LaserGRBL [![Donation](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mlpita%40bergamo3%2eit&lc=US&item_name=LaserGRBL&item_number=Support%20development&currency_code=EUR)
+# LaserGRBL [![Donation](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/pools/c/8cQ1Lo4sRA)
 Official website [http://lasergrbl.com](http://lasergrbl.com)
 
-LaserGRBL is a Windows GUI for [GRBL](https://github.com/grbl/grbl/wiki). Unlike other GUI LaserGRBL it is specifically developed for use with laser cutter and engraver. In order to use all of LaserGRBL feature, your engraver must supports laser power modulation through gcode "S" command. LaserGRBL is compatible with [Grbl v0.9](https://github.com/grbl/grbl/) and [Grbl v1.1](https://github.com/gnea/grbl/)
+LaserGRBL is a Windows GUI for [GRBL](https://github.com/gnea/grbl/wiki). Unlike other GUI LaserGRBL it is specifically developed for use with laser cutter and engraver. In order to use all of LaserGRBL feature, your engraver must supports laser power modulation through gcode "S" command. LaserGRBL is compatible with [Grbl v0.9](https://github.com/grbl/grbl/) and [Grbl v1.1](https://github.com/gnea/grbl/)
 
 All downloads available at https://github.com/arkypita/LaserGRBL/releases
 
@@ -9,14 +9,15 @@ All downloads available at https://github.com/arkypita/LaserGRBL/releases
 
 Do you like LaserGRBL? Support development with your donation!
 
-[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mlpita%40bergamo3%2eit&lc=US&item_name=LaserGRBL&item_number=Support%20development&currency_code=EUR)
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/pools/c/8cQ1Lo4sRA)
 
 ### Existing Features
 
 - GCode file loading with engraving/cutting job preview (with alpha blending for grayscale engraving)
 - Image import (jpg, bmp...) with line by line GCode generation (horizontal, vertical, and diagonal).
-- Image import (jpg, bmp...) with Vectorization! [Experimental]
+- Image import (jpg, bmp...) with Vectorization!
 - Image import (jpg, bmp...) with 1bit dithering, best result with low power laser
+- Vector file import (svg only) [Experimental]
 - Different color scheme optimized for different safety glasses
 - User defined buttons, power to you!
 - Grbl Configuration Import/Export
@@ -43,11 +44,11 @@ Do you like LaserGRBL? Support development with your donation!
 
 ### Development Roadmap
 
-Development status and roadmap can be found here: [Roadmap](https://github.com/arkypita/LaserGRBL/issues/10)
+Development status and roadmap can be found here: [Roadmap](https://github.com/arkypita/LaserGRBL/issues/64)
 
 ### Missing Features
 
-- No Z axis control! (LaserGRBL is for XY machine)
+- Minimal Z axis control (LaserGRBL is for XY machine)
 
 #### Screenshot and videos
 
@@ -79,13 +80,28 @@ LaserGRBL contains some code from:
 - [Bezier2Biarc](https://github.com/domoszlai/bezier2biarc) - Copyright Laszlo
 - [websocket-sharp](https://github.com/sta/websocket-sharp) - Copyright sta.blockhead
 - [Expression Evaluator](https://github.com/vubiostat/expression.cs) - Copyright Will Gray, Jeremy Roberts
+- [GCodeFromSVG](https://github.com/svenhb/GRBL-Plotter) - Copyright Sven Hasemann
+- [MS SVG Library](https://archive.codeplex.com/?p=svg) - Microsoft Public License
+- [Clipper](http://www.angusj.com/delphi/clipper.php) - Angus Johnson. Copyright © 2010-2014
 
 Thanks to:
 - Myself, for italian and english language
-- Fernando Luna, for spanish translation
-- Olivier Salvador, for french translation
+- Fernando Luna, sqall123, for spanish translation
+- Olivier Salvador, guillaume-rico [#848](https://github.com/arkypita/LaserGRBL/pull/848) for french translation
 - Gerd Vogel, for german translation
 - Anders Lassen, for danish translation
 - Gerson Koppe, for brasilian translation
-- Alexey Golovin, for russian translation
+- Alexey Golovin, Newcomere, AlexeyBond, for russian translation
 - Yang Haiqiang, for chinese translation
+- 00alkskodi00, for slovak translation [#670](https://github.com/arkypita/LaserGRBL/issues/670)
+- ddogman, for hungarian translation [#735](https://github.com/arkypita/LaserGRBL/issues/735)
+- Petr Bitnar, for czech translation
+- Ozzybanan, for polish translation
+- onmaker, for traditional chinese translation [#1066](https://github.com/arkypita/LaserGRBL/pull/1066)
+- Nikolaos Ntekas, for Greek translation [#1234](https://github.com/arkypita/LaserGRBL/pull/1234)
+- Mrjavaci, for Turkish translation [#1293](https://github.com/arkypita/LaserGRBL/pull/1293)
+- Filippo Rivato for code contribution [#305](https://github.com/arkypita/LaserGRBL/pull/305) and again [#1251](https://github.com/arkypita/LaserGRBL/pull/1251)
+- Fabio Ferretti for code contribution [#592](https://github.com/arkypita/LaserGRBL/pull/592)
+- guillaume-rico for code contribution on Smoothie support
+- Tobias Falkner, for code contribution [#937](https://github.com/arkypita/LaserGRBL/pull/937)
+- gmmanonymus111, for code contribution [#1032](https://github.com/arkypita/LaserGRBL/pull/1032)

@@ -1,4 +1,10 @@
-﻿using System;
+﻿//Copyright (c) 2016-2021 Diego Settimi - https://github.com/arkypita/
+
+// This program is free software; you can redistribute it and/or modify  it under the terms of the GPLv3 General Public License as published by  the Free Software Foundation; either version 3 of the License, or (at  your option) any later version.
+// This program is distributed in the hope that it will be useful, but  WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GPLv3  General Public License for more details.
+// You should have received a copy of the GPLv3 General Public License  along with this program; if not, write to the Free Software  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,  USA. using System;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +15,7 @@ namespace LaserGRBL
 	class ColorScheme
 	{
 		public enum Scheme
-		{ BlueLaser, RedLaser, Dark, Hacker }
+		{ BlueLaser, RedLaser, Dark, Hacker, Nighty }
 
 		public static Dictionary<Scheme, Color[]> mData;
 
@@ -42,6 +48,9 @@ namespace LaserGRBL
 				Color.DarkBlue,				//response good
 				Color.Red,					//response bad
 				Color.Black,				//response others
+
+				Color.DodgerBlue,			//link color
+				Color.Purple,				//visited link color
 			});
 			mData.Add(Scheme.RedLaser, new Color[] 
 			{
@@ -66,9 +75,12 @@ namespace LaserGRBL
 				Color.OrangeRed,			//position
 				Color.Purple,				//others
 				
-				Color.DarkGreen,				//response good
+				Color.DarkGreen,			//response good
 				Color.Red,					//response bad
 				Color.Black,				//response others
+
+				Color.DodgerBlue,			//link color
+				Color.Purple,				//visited link color
 			});
 			mData.Add(Scheme.Dark, new Color[] 
 			{
@@ -96,6 +108,9 @@ namespace LaserGRBL
 				Color.Lime,					//response good
 				Color.OrangeRed,			//response bad
 				Color.White,				//response others
+
+				Color.Yellow,				//link color
+				Color.Violet,				//visited link color
 			});
 			mData.Add(Scheme.Hacker, new Color[] 
 			{
@@ -123,13 +138,46 @@ namespace LaserGRBL
 				Color.LightBlue,			//response good
 				Color.Red,					//response bad
 				Color.White,				//response others
+
+				Color.Yellow,					//link color
+				Color.Violet,				//visited link color
 			});
-			
-			CurrentScheme = Scheme.RedLaser;
+            mData.Add(Scheme.Nighty, new Color[]
+            {
+                Color.FromArgb(25,25,25),	//form backcolor
+				Color.Aqua,			        //form forecolor
+
+				Color.FromArgb(25,25,25),   //preview background
+				Color.Aqua,		    		//preview text
+				Color.FromArgb(25,25,25),	//preview grid?
+				Color.DimGray,				//preview reference line
+				Color.DarkOrange,			//preview first line
+				Color.FromArgb(150,0,120),  //preview other line
+				Color.FromArgb(0,125,140),	//preview laser
+				Color.Pink,	                //preview cross position
+
+				Color.FromArgb(25,25,25),	//log background
+				Color.Aqua,		        	//command text
+				Color.FromArgb(220,30,220),	//startup
+				Color.FromArgb(0,127,139),	//alarm
+				Color.MediumVioletRed,      //config
+				Color.MediumVioletRed,		//feedback
+				Color.MediumPurple,			//position
+				Color.Purple,				//others
+				
+				Color.DarkGreen,			//response good
+				Color.Red,		    		//response bad
+				Color.LimeGreen,	    	//response others
+
+				Color.Yellow,				//link color
+				Color.Violet,				//visited link color
+            });
+
+            CurrentScheme = Scheme.RedLaser;
 		}
 
 		public static bool DarkScheme
-		{ get { return CurrentScheme == Scheme.Dark || CurrentScheme == Scheme.Hacker; } }
+		{ get { return CurrentScheme == Scheme.Dark || CurrentScheme == Scheme.Hacker || CurrentScheme == Scheme.Nighty; } }
 
 		public static Scheme CurrentScheme { get; set; }
 
@@ -175,6 +223,8 @@ namespace LaserGRBL
 		{ get { return GetColor(2); } }
 		public static Color PreviewText
 		{ get { return GetColor(3); } }
+		public static Color PreviewRuler
+		{ get { return PreviewText; } }
 		public static Color PreviewGrid
 		{ get { return GetColor(4); } }
 		public static Color PreviewJobRange
@@ -210,7 +260,13 @@ namespace LaserGRBL
 		{ get { return GetColor(19); } }
 		public static Color LogRightOTHERS
 		{ get { return GetColor(20); } }
-		
+        public static Color TextBoxColorOverride
+        { get { return GetColor(20); } }
+		public static Color LinkColor
+		{ get { return GetColor(21); } }
+		public static Color VisitedLinkColor
+		{ get { return GetColor(22); } }
+
 
 		private static Color GetColor(int index)
 		{return mData[CurrentScheme][index];}

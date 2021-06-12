@@ -29,7 +29,7 @@
 			this.BtnImport = new System.Windows.Forms.Button();
 			this.GB = new System.Windows.Forms.GroupBox();
 			this.LblAction = new System.Windows.Forms.Label();
-			this.DGV = new MyDatagridView();
+			this.DGV = new LaserGRBL.MyDatagridView();
 			this.DollarNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Parameter = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -134,6 +134,7 @@
             this.Number});
 			resources.ApplyResources(this.DGV, "DGV");
 			this.DGV.Name = "DGV";
+			this.DGV.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.DGV_CellValidating);
 			this.DGV.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.DGV_DataError);
 			// 
 			// DollarNumber
@@ -224,11 +225,11 @@
 		private System.Windows.Forms.Label LblConnect;
 		private System.Windows.Forms.Timer ActionTimer;
 		private System.Windows.Forms.Label LblAction;
-		private System.Windows.Forms.DataGridViewTextBoxColumn numberDataGridViewTextBoxColumn;
-		private System.Windows.Forms.DataGridViewTextBoxColumn parameterDataGridViewTextBoxColumn;
-		private System.Windows.Forms.DataGridViewTextBoxColumn valueDataGridViewTextBoxColumn;
-		private System.Windows.Forms.DataGridViewTextBoxColumn unitDataGridViewTextBoxColumn;
-		private System.Windows.Forms.DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
+		//private System.Windows.Forms.DataGridViewTextBoxColumn numberDataGridViewTextBoxColumn;
+		//private System.Windows.Forms.DataGridViewTextBoxColumn parameterDataGridViewTextBoxColumn;
+		//private System.Windows.Forms.DataGridViewTextBoxColumn valueDataGridViewTextBoxColumn;
+		//private System.Windows.Forms.DataGridViewTextBoxColumn unitDataGridViewTextBoxColumn;
+		//private System.Windows.Forms.DataGridViewTextBoxColumn descriptionDataGridViewTextBoxColumn;
 		private System.Windows.Forms.DataGridViewTextBoxColumn DollarNumber;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Parameter;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Value;

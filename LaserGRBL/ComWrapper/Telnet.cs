@@ -1,4 +1,10 @@
-﻿using System;
+﻿//Copyright (c) 2016-2021 Diego Settimi - https://github.com/arkypita/
+
+// This program is free software; you can redistribute it and/or modify  it under the terms of the GPLv3 General Public License as published by  the Free Software Foundation; either version 3 of the License, or (at  your option) any later version.
+// This program is distributed in the hope that it will be useful, but  WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GPLv3  General Public License for more details.
+// You should have received a copy of the GPLv3 General Public License  along with this program; if not, write to the Free Software  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,  USA. using System;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,6 +38,8 @@ namespace LaserGRBL.ComWrapper
 
 			cln = new System.Net.Sockets.TcpClient();
 			Logger.LogMessage("OpenCom", "Open {0}", mAddress);
+			ComLogger.Log("com", string.Format("Open {0} {1}", mAddress, GetResetDiagnosticString()));
+
 			cln.Connect(IPHelper.Parse(mAddress));
 
 			Stream cst = cln.GetStream();
@@ -40,12 +48,28 @@ namespace LaserGRBL.ComWrapper
 			swriter = new StreamWriter(cst, Encoding.ASCII);
 		}
 
+		private string GetResetDiagnosticString()
+		{
+			//bool rts = Settings.GetObject("HardReset Grbl On Connect", false);
+			//bool dtr = Settings.GetObject("HardReset Grbl On Connect", false);
+			bool soft = Settings.GetObject("Reset Grbl On Connect", false);
+
+			string rv = "";
+
+			//if (dtr) rv += "DTR, ";
+			//if (rts) rv += "RTS, ";
+			if (soft) rv += "Ctrl-X, ";
+
+			return rv.Trim(", ".ToCharArray());
+		}
+
 		public void Close(bool auto)
 		{
 			if (cln != null)
 			{
 				try
 				{
+                    ComLogger.Log("com", string.Format("Close {0} [{1}]", mAddress, auto ? "CORE" : "USER"));
 					Logger.LogMessage("CloseCom", "Close {0} [{1}]", mAddress, auto ? "CORE" : "USER");
 					cln.Close();
 				}
@@ -65,12 +89,21 @@ namespace LaserGRBL.ComWrapper
 
 		public void Write(byte b)
 		{
+            ComLogger.Log("tx", b);
 			bwriter.Write(b);
 			bwriter.Flush();
 		}
 
-		public void Write(string text)
+        public void Write(byte[] arr)
+        {
+            ComLogger.Log("tx", arr);
+            bwriter.Write(arr);
+            bwriter.Flush();
+        }
+
+        public void Write(string text)
 		{
+            ComLogger.Log("tx", text);
 			swriter.Write(text);
 			swriter.Flush();
 		}
@@ -86,11 +119,13 @@ namespace LaserGRBL.ComWrapper
 					System.Threading.Thread.Sleep(1);
 			}
 
+            ComLogger.Log("rx", rv);
 			return rv;
 		}
 
 		public bool HasData()
 		{ return IsOpen && ((System.Net.Sockets.NetworkStream)sreader.BaseStream).DataAvailable; }
+
 	}
 
 

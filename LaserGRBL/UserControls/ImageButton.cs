@@ -1,4 +1,9 @@
-﻿
+﻿//Copyright (c) 2016-2021 Diego Settimi - https://github.com/arkypita/
+
+// This program is free software; you can redistribute it and/or modify  it under the terms of the GPLv3 General Public License as published by  the Free Software Foundation; either version 3 of the License, or (at  your option) any later version.
+// This program is distributed in the hope that it will be useful, but  WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GPLv3  General Public License for more details.
+// You should have received a copy of the GPLv3 General Public License  along with this program; if not, write to the Free Software  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,  USA. using System;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,6 +18,9 @@ namespace LaserGRBL.UserControls
 	[System.ComponentModel.DefaultEvent("Click")]
 	public partial class ImageButton : System.Windows.Forms.UserControl
 	{
+		private const float CAPTION_FONTSIZE = 7f;
+		private const int CAPTION_HEIGHT = 12;
+		private const int CLICK_SCALE_IN_PIXEL = 1;
 
 		#region " Codice generato da Progettazione Windows Form "
 
@@ -56,6 +64,13 @@ namespace LaserGRBL.UserControls
 				SizingMode = SizingMode;
 				Invalidate();
 			}
+		}
+
+		public string Caption { get; set; }
+
+		private bool HasCaption
+		{
+			get { return !string.IsNullOrEmpty(Caption); }
 		}
 
 		private Image _altimage;
@@ -109,8 +124,7 @@ namespace LaserGRBL.UserControls
 			set { _coloration = value; }
 		}
 
-
-		protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
+        protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
 		{
 			base.OnPaint(e);
 
@@ -132,6 +146,13 @@ namespace LaserGRBL.UserControls
 					Size = new Size(this.Width - 1, this.Height - 1);
 				}
 
+				if (HasCaption)
+				{
+					Size.Height -= CAPTION_HEIGHT;
+					Size.Width -= CAPTION_HEIGHT;
+					Point.X += (Image.Width - Size.Width) / 2;
+				}
+
 
 				if (DrawDisabled())
 				{
@@ -141,45 +162,69 @@ namespace LaserGRBL.UserControls
 					//Tmp = Base.Drawing.ImageTransform.ChangeAlpha(Tmp, 150);
 				}
 				else
-				{
-					if (!Coloration.Equals(Color.Empty))
-					{
-						Tmp = Base.Drawing.ImageTransform.GrayScale(Tmp, Base.Drawing.ImageTransform.Formula.CCIRRec709);
-						Tmp = Base.Drawing.ImageTransform.Brightness(Tmp, -0.5F);
-						Tmp = Base.Drawing.ImageTransform.Translate(Tmp, Coloration, 0);
-					}
+                {
+                    if (!Coloration.Equals(Color.Empty))
+                    {
+                        Tmp = Base.Drawing.ImageTransform.GrayScale(Tmp, Base.Drawing.ImageTransform.Formula.CCIRRec709);
+                        Tmp = Base.Drawing.ImageTransform.Brightness(Tmp, -0.5F);
+                        Tmp = Base.Drawing.ImageTransform.Translate(Tmp, Coloration, 0);
+                    }
 
-					if (RectangleToScreen(ClientRectangle).Contains(System.Windows.Forms.Cursor.Position))
-					{
-						if (MouseButtons == System.Windows.Forms.MouseButtons.Left)
-						{
-							//Contenuto con mouse premuto
-							Tmp = Base.Drawing.ImageTransform.Brightness(Tmp, 0.15F);
-							Point = new Point(1, 1);
+                    if (IsMouseInside())
+                    {
+                        if (MouseButtons == System.Windows.Forms.MouseButtons.Left)
+                        {
+                            //Contenuto con mouse premuto
+                            Tmp = Base.Drawing.ImageTransform.Brightness(Tmp, 0.15F);
+                            Point = new Point(Point.X + CLICK_SCALE_IN_PIXEL, CLICK_SCALE_IN_PIXEL);
+							Size.Width -= CLICK_SCALE_IN_PIXEL * 2;
+							Size.Height -= CLICK_SCALE_IN_PIXEL * 2;
 						}
-						else
-						{
-							//Contenuto con mouse non premuto
-							Tmp = Base.Drawing.ImageTransform.Brightness(Tmp, 0.1F);
-						}
-					}
-					else
-					{
-						//Non contenuto
-						Tmp = Base.Drawing.ImageTransform.Brightness(Tmp, 0);
-					}
-				}
+                        else
+                        {
+                            //Contenuto con mouse non premuto
+                            Tmp = Base.Drawing.ImageTransform.Brightness(Tmp, 0.1F);
+                        }
+                    }
+                    else
+                    {
+                        //Non contenuto
+                        Tmp = Base.Drawing.ImageTransform.Brightness(Tmp, 0);
+                    }
+                }
 
-				if ((Tmp != null))
+                if ((Tmp != null))
 				{
 					e.Graphics.DrawImage(Tmp, new Rectangle(Point, Size));
 				}
 
+				if (this.HasCaption)
+				{
+					StringFormat sf = new StringFormat()
+					{
+						Alignment = StringAlignment.Center,
+						LineAlignment = StringAlignment.Center,
+						FormatFlags = StringFormatFlags.LineLimit
+					};
+
+					using (Font captionFont = new Font("Microsoft Sans Serif", CAPTION_FONTSIZE))
+					{
+						float textY = Height - CAPTION_HEIGHT - 4;
+
+						using (Brush b = new SolidBrush(ForeColor))
+							e.Graphics.DrawString(Caption, captionFont, b, new RectangleF(0f, textY, Width, Height - textY), sf);
+					}
+				}
 			}
 
 		}
 
-		protected virtual bool DrawDisabled()
+        public virtual bool IsMouseInside()
+        {
+            return RectangleToScreen(ClientRectangle).Contains(System.Windows.Forms.Cursor.Position);
+        }
+
+        protected virtual bool DrawDisabled()
 		{
 			return !Enabled;
 		}

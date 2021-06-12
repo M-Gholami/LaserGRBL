@@ -1,4 +1,10 @@
-﻿using System;
+﻿//Copyright (c) 2016-2021 Diego Settimi - https://github.com/arkypita/
+
+// This program is free software; you can redistribute it and/or modify  it under the terms of the GPLv3 General Public License as published by  the Free Software Foundation; either version 3 of the License, or (at  your option) any later version.
+// This program is distributed in the hope that it will be useful, but  WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GPLv3  General Public License for more details.
+// You should have received a copy of the GPLv3 General Public License  along with this program; if not, write to the Free Software  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,  USA. using System;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -20,13 +26,21 @@ namespace LaserGRBL
 			Core = core;
 			BackColor = ColorScheme.FormBackColor;
 			GB.ForeColor = ForeColor = ColorScheme.FormForeColor;
-			DGV.BackgroundColor = SystemColors.Control;
-			DGV.ForeColor = SystemColors.ControlText;
-			BtnRead.BackColor = BtnWrite.BackColor = BtnImport.BackColor = BtnExport.BackColor = BtnCancel.BackColor = ColorScheme.FormButtonsColor;
+            DGV.EnableHeadersVisualStyles = false;
+            DGV.BackgroundColor = ColorScheme.FormBackColor; //SystemColors.Control;
+            DGV.ForeColor = ColorScheme.FormForeColor; //SystemColors.ControlText;
+            DGV.DefaultCellStyle.BackColor = ColorScheme.FormBackColor;
+            DGV.ColumnHeadersDefaultCellStyle.BackColor = ColorScheme.FormBackColor;
+            DGV.ColumnHeadersDefaultCellStyle.ForeColor = ColorScheme.FormForeColor;
+            DGV.RowHeadersDefaultCellStyle.BackColor = ColorScheme.FormBackColor;
+            DGV.RowHeadersDefaultCellStyle.ForeColor = ColorScheme.FormForeColor;
+            DGV.Columns["Value"].DefaultCellStyle.ForeColor = ColorScheme.FormForeColor;
+            DGV.Columns["Value"].DefaultCellStyle.BackColor = ColorScheme.FormBackColor;
+            BtnRead.BackColor = BtnWrite.BackColor = BtnImport.BackColor = BtnExport.BackColor = BtnCancel.BackColor = ColorScheme.FormButtonsColor;
 
 			mLocalCopy = Core.Configuration.ToList();
 			DGV.DataSource = mLocalCopy;
-			Core.MachineStatusChanged += RefreshEnabledButtons;
+            Core.MachineStatusChanged += RefreshEnabledButtons;
 			
 			RefreshEnabledButtons();
 		}
@@ -48,14 +62,15 @@ namespace LaserGRBL
 
 		void RefreshEnabledButtons()
 		{
-			BtnExport.Enabled = BtnImport.Enabled = BtnRead.Enabled = BtnWrite.Enabled = Core.MachineStatus == GrblCore.MacStatus.Idle;
-			DGV.ReadOnly = LblConnect.Visible = !BtnRead.Enabled;
+			BtnExport.Enabled = Core.Configuration.Count > 0;
+			BtnImport.Enabled = BtnRead.Enabled = BtnWrite.Enabled = Core.CanReadWriteConfig;
+			DGV.ReadOnly = LblConnect.Visible = !Core.IsConnected;
 		}
 
-		internal static void CreateAndShowDialog(GrblCore core)
+		internal static void CreateAndShowDialog(Form parent, GrblCore core)
 		{
 			using (GrblConfig sf = new GrblConfig(core))
-				sf.ShowDialog();
+				sf.ShowDialog(parent);
 		}
 
 		private void BtnCancel_Click(object sender, EventArgs e)
@@ -76,7 +91,7 @@ namespace LaserGRBL
 
 				ActionResult( String.Format(Strings.BoxReadConfigSuccess, mLocalCopy.Count));
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				Cursor = DefaultCursor;
 				ActionResult(Strings.BoxReadConfigError);
@@ -117,7 +132,7 @@ namespace LaserGRBL
 				Cursor = DefaultCursor;
 				System.Windows.Forms.MessageBox.Show(String.Format(import ? Strings.BoxImportConfigWithError : Strings.BoxWriteConfigWithError, conf.Count, ex.Errors.Count) + "\n" + ex.Message, Strings.BoxExportConfigErrorTitle, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				Cursor = DefaultCursor;
 				System.Windows.Forms.MessageBox.Show(String.Format(import ? Strings.BoxImportConfigWithError : Strings.BoxWriteConfigWithError, conf.Count, "unknown"), Strings.BoxExportConfigErrorTitle, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
@@ -135,18 +150,31 @@ namespace LaserGRBL
 		private void BtnExport_Click(object sender, EventArgs e)
 		{
 			string filename = null;
-			using (System.Windows.Forms.SaveFileDialog ofd = new SaveFileDialog())
+			using (System.Windows.Forms.SaveFileDialog sfd = new SaveFileDialog())
 			{
-				ofd.Filter = "GCODE Files|*.nc";
-				ofd.AddExtension = true;
-				ofd.RestoreDirectory = true;
-				if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-					filename = ofd.FileName;
+				sfd.Filter = "GCODE Files|*.nc";
+				sfd.AddExtension = true;
+				sfd.RestoreDirectory = true;
+
+				System.Windows.Forms.DialogResult dialogResult = System.Windows.Forms.DialogResult.Cancel;
+				try
+				{
+					dialogResult = sfd.ShowDialog(this);
+				}
+				catch (System.Runtime.InteropServices.COMException)
+				{
+					sfd.AutoUpgradeEnabled = false;
+					dialogResult = sfd.ShowDialog(this);
+				}
+
+				if (dialogResult == System.Windows.Forms.DialogResult.OK)
+					filename = sfd.FileName;
 			}
 
 			if (filename != null)
 			{
-				Core.RefreshConfig();
+				Core.RefreshConfig(); //internally skipped if not possible
+
 				List<GrblConf.GrblConfParam> toexport = Core.Configuration.ToList();
 				if (toexport.Count > 0)
 				{
@@ -181,7 +209,19 @@ namespace LaserGRBL
 				ofd.CheckFileExists = true;
 				ofd.Multiselect = false;
 				ofd.RestoreDirectory = true;
-				if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+
+				System.Windows.Forms.DialogResult dialogResult = System.Windows.Forms.DialogResult.Cancel;
+				try
+				{
+					dialogResult = ofd.ShowDialog(this);
+				}
+				catch (System.Runtime.InteropServices.COMException)
+				{
+					ofd.AutoUpgradeEnabled = false;
+					dialogResult = ofd.ShowDialog(this);
+				}
+
+				if (dialogResult == System.Windows.Forms.DialogResult.OK)
 					filename = ofd.FileName;
 			}
 
@@ -296,7 +336,29 @@ namespace LaserGRBL
 			else
 				ActionResult(Strings.BoxReadConfigPleaseConnect);
 		}
+
+		private void DGV_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+		{
+			if (DGV[e.ColumnIndex, e.RowIndex].IsInEditMode)
+			{
+				if (e.ColumnIndex == 3)
+				{
+					object value = DGV[e.ColumnIndex, e.RowIndex].Value;
+					int parid = int.Parse(DGV[1, e.RowIndex].Value.ToString().Trim(new char[] { '$' }));
+
+					string error = Core.ValidateConfig(parid, value);
+
+					if (error != null)
+					{
+						MessageBox.Show(error, Strings.WarnMessageBoxHeader, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+						e.Cancel = true;
+						DGV.CancelEdit();
+						DGV.EndEdit();
+					}
+				}
+			}
+		}
+
 	}
-
-
 }

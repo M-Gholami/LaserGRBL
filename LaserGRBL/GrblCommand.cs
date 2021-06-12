@@ -1,4 +1,10 @@
-﻿using System;
+﻿//Copyright (c) 2016-2021 Diego Settimi - https://github.com/arkypita/
+
+// This program is free software; you can redistribute it and/or modify  it under the terms of the GPLv3 General Public License as published by  the Free Software Foundation; either version 3 of the License, or (at  your option) any later version.
+// This program is distributed in the hope that it will be useful, but  WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GPLv3  General Public License for more details.
+// You should have received a copy of the GPLv3 General Public License  along with this program; if not, write to the Free Software  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,  USA. using System;
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using LaserGRBL.CSV;
@@ -20,9 +26,25 @@ namespace LaserGRBL
 	
 	public static class CSVD
 	{
-		public static CsvDictionary Settings = new CSV.CsvDictionary("LaserGRBL.CSV.setting_codes.csv", 3);
+		public static CsvDictionary Settings = new CSV.CsvDictionary("LaserGRBL.CSV.setting_codes.v1.1.csv", 3);
 		public static CsvDictionary Alarms = new CSV.CsvDictionary("LaserGRBL.CSV.alarm_codes.csv", 2);
 		public static CsvDictionary Errors = new CSV.CsvDictionary("LaserGRBL.CSV.error_codes.csv", 2);
+
+		internal static void LoadAppropriateSettings(GrblCore.GrblVersionInfo value)
+		{
+			try
+			{
+				string ResourceName;
+				if (value.IsOrtur)
+					ResourceName = String.Format("LaserGRBL.CSV.setting_codes.ortur.v1.0.csv"); 
+				else
+					ResourceName = String.Format("LaserGRBL.CSV.setting_codes.v{0}.{1}.csv", value.Major, value.Minor);
+
+
+				Settings = new CsvDictionary(ResourceName, 3);
+			}
+			catch { }
+		}
 	}
 
 	public partial class GrblCommand : ICloneable, IGrblRow
@@ -67,26 +89,26 @@ namespace LaserGRBL
 		private string mCodedResult;
 		private TimeSpan mTimeOffset;
 		private Dictionary<char, GrblCommand.Element> mHelper;
-
 		private int mRepeatCount;
 
-		public GrblCommand(string line)
-		{ mLine = line.ToUpper().Trim(); mRepeatCount = 0; }
-
-		public GrblCommand(string line, int repeat)
-		{ mLine = line.ToUpper().Trim(); mRepeatCount = repeat; }
+		public GrblCommand(string line, int repeat = 0, bool preservecase = false)
+		{ 
+			mLine = line.Trim();
+			if (!preservecase) mLine = mLine.ToUpper();
+			mRepeatCount = repeat; 
+		}
 
 		public GrblCommand(IEnumerable<Element> elements)
 		{
 			mLine = "";
 			foreach (GrblCommand.Element e in elements)
 				mLine = mLine + e.ToString() + " ";
-			mLine = mLine.TrimEnd().ToUpper();
+			mLine = mLine.ToUpper().Trim();
 		}
 
 		public GrblCommand(Element first, GrblCommand toappend)
 		{
-			mLine = string.Format("{0} {1}", first, toappend.mLine);
+			mLine = string.Format("{0} {1}", first, toappend.mLine).ToUpper().Trim();
 		}
 
 		public bool JustBuilt
@@ -246,9 +268,8 @@ namespace LaserGRBL
 		public bool IsWriteEEPROM
 		{ get { return IsGrblCommand && IsSetConf; } } //maybe need to add G10/G28.1/G30.1 ?
 
-		static System.Text.RegularExpressions.Regex confRegEX = new System.Text.RegularExpressions.Regex(@"^[$](\d+) *= *(\d+\.?\d*)");
 		private bool IsSetConf
-		{ get { return confRegEX.IsMatch(mLine); } }
+		{ get { return GrblConf.IsSetConf(mLine); } }
 
 		
 		#region G Codes
@@ -260,7 +281,7 @@ namespace LaserGRBL
 		{ get { return IsLinearMovement || IsArcMovement; } }
 
 		public bool IsLinearMovement
-		{ get { return !IsSetWCO && (X != null || Y != null) && (I == null && J == null && R == null); } }
+		{ get { return !IsSetWCO && (X != null || Y != null || Z != null) && (I == null && J == null && R == null); } }
 
 		//public bool IsRapidMovement
 		//{
@@ -355,20 +376,6 @@ namespace LaserGRBL
 		private Element GetElement(char key)
 		{ return mHelper.ContainsKey(key) ? mHelper[key] : null; }
 
-		public double GetArcRadius()
-		{
-			double oX = (double)(I != null ? I.Number : 0);
-			double oY = (double)(J != null ? J.Number : 0);
-			return Math.Sqrt(oX * oX + oY * oY);
-		}
-		public PointF GetCenter(float startX, float startY)
-		{
-			float oX = I != null ? (float)I.Number : 0;
-			float oY = J != null ? (float)J.Number : 0;
-
-			return new PointF(startX + oX, startY + oY);
-		}
-
 		public string GetMessage() //per la visualizzazione
 		{  return mRepeatCount == 0 ? Command : String.Format("{0} (Retry {1})", Command, mRepeatCount); } 
 
@@ -416,7 +423,7 @@ namespace LaserGRBL
 		{
 			mMessage = message.Trim();
 
-			if (mMessage.ToLower().StartsWith("$") || mMessage.ToLower().StartsWith("~") || mMessage.ToLower().StartsWith("!") || mMessage.ToLower().StartsWith("?") || mMessage.ToLower().StartsWith("ctrl"))
+			if (mMessage.ToLower().StartsWith("$") && mMessage.Contains("=")) //if (mMessage.ToLower().StartsWith("$") || mMessage.ToLower().StartsWith("~") || mMessage.ToLower().StartsWith("!") || mMessage.ToLower().StartsWith("?") || mMessage.ToLower().StartsWith("ctrl"))
 				mType = MessageType.Config;
 			else if (mMessage.ToLower().StartsWith("grbl"))
 				mType = MessageType.Startup;

@@ -1,4 +1,10 @@
-﻿using System;
+﻿//Copyright (c) 2016-2021 Diego Settimi - https://github.com/arkypita/
+
+// This program is free software; you can redistribute it and/or modify  it under the terms of the GPLv3 General Public License as published by  the Free Software Foundation; either version 3 of the License, or (at  your option) any later version.
+// This program is distributed in the hope that it will be useful, but  WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GPLv3  General Public License for more details.
+// You should have received a copy of the GPLv3 General Public License  along with this program; if not, write to the Free Software  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,  USA. using System;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -18,6 +24,7 @@ namespace LaserGRBL.UserControls
 			InitializeComponent();
 			Core = core;
 			fun = function;
+			TB.DoubleClick += TB_DoubleClick;
 			
 			if (function == 0)
 			{
@@ -58,6 +65,11 @@ namespace LaserGRBL.UserControls
 			RefreshText();
 		}
 
+		private void TB_DoubleClick(object sender, EventArgs e)
+		{
+			TB.Value = 100;
+		}
+
 		private void TB_ValueChanged(object sender, EventArgs e)
 		{
 			if (fun == 0)
@@ -94,5 +106,14 @@ namespace LaserGRBL.UserControls
 			Core.ManageOverrides();
 		}
 
+		private void BtnReset_Click(object sender, EventArgs e)
+		{
+			if (fun == 0)
+				TB.Value = 2;
+			if (fun == 1)
+				TB.Value = 100;
+			if (fun == 2)
+				TB.Value = 100;
+		}
 	}
 }

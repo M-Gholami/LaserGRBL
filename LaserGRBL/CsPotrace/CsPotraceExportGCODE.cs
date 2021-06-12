@@ -1,4 +1,10 @@
-﻿using System;
+﻿//Copyright (c) 2016-2021 Diego Settimi - https://github.com/arkypita/
+
+// This program is free software; you can redistribute it and/or modify  it under the terms of the GPLv3 General Public License as published by  the Free Software Foundation; either version 3 of the License, or (at  your option) any later version.
+// This program is distributed in the hope that it will be useful, but  WITHOUT ANY WARRANTY; without even the implied warranty of  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GPLv3  General Public License for more details.
+// You should have received a copy of the GPLv3 General Public License  along with this program; if not, write to the Free Software  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,  USA. using System;
+
+using System;
 using System.Collections.Generic;
 using CsPotrace.BezierToBiarc;
 using System.Collections;
@@ -20,7 +26,7 @@ namespace CsPotrace
 		/// <param name="Width">Width of the exportd cvg-File</param>
 		/// <param name="Height">Height of the exportd cvg-File</param>
 		/// <returns></returns>
-		public static List<string> Export2GCode(List<List<CsPotrace.Curve>> list, int oX, int oY, double scale, string lOn, string lOff, Size originalImageSize)
+		public static List<string> Export2GCode(List<List<CsPotrace.Curve>> list, float oX, float oY, double scale, string lOn, string lOff, Size originalImageSize, string skipcmd)
 		{
 			bool debug = false;
 
@@ -36,10 +42,8 @@ namespace CsPotrace
 			}
 
 			List<string> rv = new List<string>();
-
-			list.Reverse();
 			foreach (List<CsPotrace.Curve> Curves in list)
-				rv.AddRange(GetPathGC(Curves, lOn, lOff, oX * scale, oY * scale, scale, g));
+				rv.AddRange(GetPathGC(Curves, lOn, lOff, oX * scale, oY * scale, scale, g, skipcmd));
 
 			if (debug)
 			{
@@ -51,11 +55,11 @@ namespace CsPotrace
 			return rv;
 		}
 
-		private static List<string> GetPathGC(List<CsPotrace.Curve> Curves, string lOn, string lOff, double oX, double oY, double scale, Graphics g)
+		private static List<string> GetPathGC(List<CsPotrace.Curve> Curves, string lOn, string lOff, double oX, double oY, double scale, Graphics g, string skipcmd)
 		{
 			List<string> rv = new List<string>();
 
-			OnPathBegin(Curves, lOn, oX, oY, scale, rv);
+			OnPathBegin(Curves, lOn, oX, oY, scale, rv, skipcmd);
 
 			foreach (CsPotrace.Curve Curve in Curves)
 				OnPathSegment(Curve, oX, oY, scale, rv, g);
@@ -94,14 +98,22 @@ namespace CsPotrace
 
 				try
 				{
-					List<BiArc> bal = Algorithm.ApproxCubicBezier(cb, 5, 1);
-					foreach (BiArc ba in bal)
+					List<BiArc> bal = Algorithm.ApproxCubicBezier(cb, 5, 2);
+					if (bal != null)	//può ritornare null se ha troppi punti da processare
 					{
-						if (!double.IsNaN(ba.A1.Length) && !double.IsNaN(ba.A1.LinearLength))
-							rv.Add(GetArcGC(ba.A1, oX, oY, scale, g));
+						foreach (BiArc ba in bal)
+						{
+							if (!double.IsNaN(ba.A1.Length) && !double.IsNaN(ba.A1.LinearLength))
+								rv.Add(GetArcGC(ba.A1, oX, oY, scale, g));
 
-						if (!double.IsNaN(ba.A2.Length) && !double.IsNaN(ba.A2.LinearLength))
-							rv.Add(GetArcGC(ba.A2, oX, oY, scale, g));
+							if (!double.IsNaN(ba.A2.Length) && !double.IsNaN(ba.A2.LinearLength))
+								rv.Add(GetArcGC(ba.A2, oX, oY, scale, g));
+						}
+					}
+					else //same as exception
+					{
+						if (g != null) g.DrawLine(Pens.DarkGray, (float)Curve.A.X, (float)Curve.A.Y, (float)Curve.B.X, (float)Curve.B.Y);
+						rv.Add(String.Format("G1 X{0} Y{1}", formatnumber(Curve.B.X + oX, scale), formatnumber(Curve.B.Y + oY, scale)));
 					}
 				}
 				catch
@@ -113,12 +125,12 @@ namespace CsPotrace
 			}
 		}
 
-		private static void OnPathBegin(List<CsPotrace.Curve> Curves, string lOn, double oX, double oY, double scale, List<string> rv)
+		private static void OnPathBegin(List<CsPotrace.Curve> Curves, string lOn, double oX, double oY, double scale, List<string> rv, string skipcmd)
 		{
 			if (Curves.Count > 0)
 			{
 				//fast go to position
-				rv.Add(String.Format("G0 X{0} Y{1}", formatnumber(Curves[0].A.X + oX, scale), formatnumber(Curves[0].A.Y + oY, scale)));
+				rv.Add(String.Format("{0} X{1} Y{2}", skipcmd, formatnumber(Curves[0].A.X + oX, scale), formatnumber(Curves[0].A.Y + oY, scale)));
 				//turn on laser
 				rv.Add(lOn);
 			}
